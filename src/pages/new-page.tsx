@@ -20,12 +20,12 @@ const positionGap = ASPECT * 1.5;
 let hovering = false;
 let timeOut = null;
 
-const Frame = ({ color, viewText }: any) => {
+const Frame = ({ color, viewText, setColor }: any) => {
   const groupRef = useRef<any>();
   const imageRefs = useRef<any[]>([]);
 
   const updateChanges = (index: number) => {
-    color?.set(medias[index].bgcolor);
+    setColor(index);
     if (!attractMode) {
       if (attractTo !== index) {
         viewText(index);
@@ -164,11 +164,19 @@ const NewPage = () => {
       });
   };
 
+  const setColor = (index: number) => {
+    colorRef.current.set(medias[index].bgcolor);
+  };
+
   return (
     <div className="relative w-screen h-screen">
       <Canvas frameloop="always" camera={{ fov: 40 }}>
         <color ref={colorRef} attach="background" args={[medias[0].bgcolor]} />
-        <Frame color={colorRef.current} viewText={viewText} />
+        <Frame
+          color={colorRef.current}
+          viewText={viewText}
+          setColor={setColor}
+        />
       </Canvas>
       <div
         ref={titleContaunerRef}
@@ -194,10 +202,9 @@ const NewPage = () => {
               key={m.id}
               className="w-12 h-12 text-xl font-extrabold bg-gray-900 rounded-full text-white flex justify-center items-center aspect-square"
               onMouseOver={() => {
-                timeOut = setTimeout(() => {
-                  viewText(index);
-                  attractTo = index;
-                }, 500);
+                viewText(index);
+                colorRef.current.set(m.bgcolor);
+                attractTo = index;
               }}>
               {index}
             </li>
