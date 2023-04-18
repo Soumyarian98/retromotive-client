@@ -2,42 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  overscroll-behavior: none;
 }
-.annotation {
-  outline: none;
-  border: none;
-  font-size: 3px;
-  font-weight: 800;
-  background: black;
-  color: #f0f0f0;
-  padding: 4px 12px;
-  border-radius: 2px;
-  letter-spacing: 0.1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  font-family: sans-serif;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
 }
