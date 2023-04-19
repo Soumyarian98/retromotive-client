@@ -13,11 +13,8 @@ let speed = 0;
 let position = 0;
 let rounded = 0;
 const ASPECT = 1.5;
-const positionGap = ASPECT * 1.5;
+const positionGap = ASPECT * 1.7;
 let animation: gsap.core.Timeline | null = null;
-let timer: any;
-let timer2: any;
-let allowAnimation = true;
 
 const Frame = ({ viewText }: any) => {
   const groupRef = useRef<any>();
@@ -26,11 +23,11 @@ const Frame = ({ viewText }: any) => {
   const updateChanges = (index: number) => {
     if (!attractMode) {
       if (attractTo !== index) {
-        clearTimeout(timer);
-        timer = setTimeout(() => {
-          viewText(index);
-          prevAttractTo = attractTo;
-        }, 500);
+        // clearTimeout(timer);
+        // timer = setTimeout(() => {
+        //   viewText(index);
+        //   prevAttractTo = attractTo;
+        // }, 500);
         attractTo = index;
       }
     }
@@ -68,10 +65,14 @@ const Frame = ({ viewText }: any) => {
 
     if (imageRefs.current && imageRefs.current.length > 0) {
       imageRefs.current.forEach((ref, i) => {
+        if (rounded === i && medias[i].isTextVisible === false) {
+          viewText(i);
+        }
+
         // console.log(position, i);
         let dist = Math.min(Math.abs(position - i), 1);
         dist = 1 - Math.pow(dist, 2);
-        let scale = 1 + 0.1 * dist;
+        let scale = 1 + 0.4 * dist;
         // @ts-ignore
         imageRefs.current[i].position.y =
           -position * positionGap + i * positionGap;
@@ -85,29 +86,25 @@ const Frame = ({ viewText }: any) => {
   });
 
   return (
-    <group rotation={[0, -Math.PI / 10, 0]}>
-      <group
-        ref={groupRef}
-        rotation={[-Math.PI / 8, 0, 0]}
-        position={[1, 0, 0]}>
-        {medias.map((el, i) => {
-          return (
-            <Suspense key={el.id} fallback={null}>
-              <CustomImage
-                ref={ref => (imageRefs.current[i] = ref)}
-                position={[0, positionGap * i, 0]}
-                url={el.imageUrl}
-              />
-            </Suspense>
-          );
-        })}
-      </group>
+    <group ref={groupRef} rotation={[-Math.PI / 10, 0, 0]} position={[0, 0, 0]}>
+      {medias.map((el, i) => {
+        return (
+          <Suspense key={el.id} fallback={null}>
+            <CustomImage
+              ref={ref => (imageRefs.current[i] = ref)}
+              position={[0, positionGap * i, 0]}
+              url={el.imageUrl}
+            />
+          </Suspense>
+        );
+      })}
     </group>
   );
 };
 
 const NewPage = () => {
   const titleContainerRef = useRef<any>();
+  const numberContainerRef = useRef<any>();
   const colorRef = useRef<any>();
   useEffect(() => {
     const handleWheele = (e: WheelEvent) => {
@@ -119,42 +116,39 @@ const NewPage = () => {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    if (allowAnimation === true) {
-      allowAnimation = false;
-      animation = gsap
-        .timeline({})
-        .from(titleContainerRef.current.children[0], {
-          opacity: 0,
-          y: -100,
-          display: "none",
-        })
-        .to(titleContainerRef.current.children[0], {
-          opacity: 1,
-          display: "block",
-          onComplete: () => {
-            allowAnimation = true;
-          },
-        });
-    }
-  }, []);
-
   const viewText = async (index: number) => {
-    if (animation) animation.kill();
+    // if (allowAnimation === false) return;
+    if (animation) {
+      animation.seek(0);
+      animation.clear();
+    }
+    const prevAttractTo = medias.findIndex(el => el.isTextVisible === true)!;
+    medias.forEach((el, i) => {
+      if (i !== index) {
+        el.isTextVisible = false;
+      } else {
+        el.isTextVisible = true;
+      }
+    });
+
+    colorRef.current.r = medias[index].bgcolor.r;
+    colorRef.current.g = medias[index].bgcolor.g;
+    colorRef.current.b = medias[index].bgcolor.b;
+
     animation = gsap
       .timeline({})
       .to(titleContainerRef.current.children[prevAttractTo], {
         opacity: 0,
-        y: 100,
         display: "none",
-        duration: 0.15,
       })
-      .to(colorRef.current, {
-        r: medias[index].bgcolor.r,
-        g: medias[index].bgcolor.g,
-        b: medias[index].bgcolor.b,
-        duration: 0.15,
-      })
+      .to(
+        numberContainerRef.current.children[index],
+        {
+          color: "#000",
+          background: "#fff",
+        },
+        "<"
+      )
       .from(
         titleContainerRef.current.children[index],
         {
@@ -188,21 +182,35 @@ const NewPage = () => {
           <img src="https://retromotive.co/wp-content/uploads/2022/03/RetroDrivingLogo.png" />
         </div>
         <ul className="flex gap-8">
-          <li className="font-medium">SHOP</li>
-          <li className="font-medium">ARTICLES</li>
-          <li className="font-medium">ADVERTISE</li>
+          <li className="text-sm uppercase font-semibold tracking-wider text-white">
+            Home
+          </li>
+          <li className="text-sm uppercase font-semibold tracking-wider text-white">
+            Mechandise
+          </li>
+          <li className="text-sm uppercase font-semibold tracking-wider text-white">
+            Subscription
+          </li>
+          <li className="text-sm uppercase font-semibold tracking-wider text-white">
+            About Us
+          </li>
         </ul>
       </div>
       <div
         ref={titleContainerRef}
-        className="absolute top-1/2 left-20 -translate-y-1/2">
+        className="absolute top-1/2 left-16 -translate-y-1/2">
         {medias.map(el => {
           return (
-            <div key={el.id} className="max-w-[50%] hidden space-y-2">
-              <h1 className="text-8xl font-extrabold text-gray-900">
-                {el.title}
-              </h1>
-              <p className="text-gray-700">{el.subtitle}</p>
+            <div key={el.id} className="hidden space-y-6 w-[300px]">
+              <div className="space-y-4">
+                <h1 className="text-4xl font-extrabold text-white">
+                  {el.title}
+                </h1>
+                <p className="text-gray-50 text-sm">{el.subtitle}</p>
+              </div>
+              <button className="text-white bg-[#050708] hover:bg-[#050708]/90 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#050708]/50 dark:hover:bg-[#050708]/30 mr-2 mb-2">
+                OPEN ARTICLE
+              </button>
             </div>
           );
         })}
@@ -210,18 +218,20 @@ const NewPage = () => {
       <ul
         onMouseEnter={() => (attractMode = true)}
         onMouseLeave={() => (attractMode = false)}
-        className="fixed right-20 top-1/2 z-50 -translate-y-1/2 flex flex-col gap-4">
+        ref={numberContainerRef}
+        className="fixed right-20 top-1/2 z-50 -translate-y-1/2 flex flex-col gap-8">
         {medias.map((m, index) => {
           return (
-            <li
-              key={m.id}
-              className="w-12 h-12 text-xl font-extrabold bg-gray-900 rounded-full text-white flex justify-center items-center aspect-square"
-              onMouseOver={() => {
-                prevAttractTo = attractTo;
-                attractTo = index;
-                viewText(index);
-              }}>
-              {index}
+            <li key={m.id} className="flex gap-4 items-center p-2 rounded-md">
+              <span className="uppercase font-semibold">{m.title}</span>
+              <span
+                onMouseOver={() => {
+                  prevAttractTo = attractTo;
+                  attractTo = index;
+                }}
+                className="w-10 h-10 text-xl font-extrabold bg-black rounded-full text-white flex justify-center items-center aspect-square">
+                {index + 1}
+              </span>
             </li>
           );
         })}

@@ -65,7 +65,6 @@ const CustomImage = forwardRef(({ position, url }: any, ref: any) => {
       <colorShiftMaterial
         transparent
         ref={imageMaterial}
-        color="hotpink"
         time={1}
         texture1={texture}
         distanceFromCenter={0}
