@@ -186,7 +186,7 @@ const NewPage = () => {
             Home
           </li>
           <li className="text-sm uppercase font-semibold tracking-wider text-white">
-            Mechandise
+            MERCHANDISE
           </li>
           <li className="text-sm uppercase font-semibold tracking-wider text-white">
             Subscription
