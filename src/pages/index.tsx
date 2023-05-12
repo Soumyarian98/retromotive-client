@@ -1,135 +1,130 @@
-import { Image } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
+import Articles from "@/components/Articles";
+import DataCarousel from "@/components/DataCarousel";
+import DownloadApp from "@/components/DownloadApp";
+import HomePage from "@/components/HomePage";
+import MagazineGrid from "@/components/MagazineGrid";
+import Merchendise from "@/components/Merchendise";
+import { motion, useAnimationControls } from "framer-motion";
+import { useEffect } from "react";
 
-const getRandomId = () => {
-  return Math.random().toString(36).substr(2, 9);
-};
-
-let speed = 0;
-let position = 0;
-let rounded = 0;
-const objDistances = new Array(5).fill({ distance: 0 });
-
-const Frame = () => {
-  const imageRefs = useRef<any[]>([]);
-
-  useFrame(() => {
-    position += speed;
-    speed *= 0.9;
-
-    rounded = Math.round(position);
-
-    let diff = rounded - position;
-
-    position += diff * 0.1;
-
-    if (imageRefs.current && imageRefs.current.length > 0) {
-      imageRefs.current.forEach((ref, i) => {
-        // @ts-ignore
-        imageRefs.current[i].position.y = -position * 1.66 + i * 1.66;
-      });
-    }
-  });
-
-  return (
-    <group rotation={[0, -Math.PI * 0.1, -Math.PI * 0.04]}>
-      {new Array(5).fill(0).map((el, i) => {
-        return (
-          <Image
-            ref={ref => (imageRefs.current[i] = ref)}
-            key={getRandomId()}
-            url="/banner.jpg"
-            scale={[3, 1.33]}
-            position={[0, 1.66 * i, 0]}
-          />
-        );
-      })}
-    </group>
-  );
-};
+const imageUrls = [
+  "/image1.jpg",
+  "/image2.jpg",
+  "/image3.jpg",
+  "/image4.jpg",
+  "/image5.jpg",
+];
 
 export default function Home() {
+  const columnControl = useAnimationControls();
+  const conatinerControl = useAnimationControls();
+  const contentControl = useAnimationControls();
+
   useEffect(() => {
-    const handleWheele = (e: WheelEvent) => {
-      speed += e.deltaY * 0.0003;
-    };
-    window.addEventListener("wheel", handleWheele);
-    return () => {
-      window.removeEventListener("wheel", handleWheele);
-    };
+    (async () => {
+      await columnControl.start({
+        height: "100%",
+        transition: { duration: 2.5, ease: "easeInOut" },
+        y: 0,
+      });
+      await conatinerControl.start({
+        scale: 1,
+        transition: { duration: 1.5, ease: "easeInOut" },
+      });
+      await contentControl.start({
+        opacity: 1,
+        display: "block",
+        transition: { ease: "easeInOut", duration: 1.5 },
+      });
+      await conatinerControl.start({
+        opacity: 0,
+
+        display: "none",
+      });
+    })();
   }, []);
+
+  const getImages = (index: number) => {
+    return new Array(5).fill(0).map((_, i) => {
+      return (
+        <div key={i} className="w-screen h-screen overflow-hidden relative">
+          {index === 2 && i === 2 ? (
+            <motion.img
+              initial={{ scale: 2 }}
+              animate={{
+                scale: 1,
+                transition: { duration: 1.5, delay: 2.5 },
+              }}
+              src="https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order1-1.jpg"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <img src={imageUrls[i]} className="w-full h-full object-cover" />
+          )}
+        </div>
+      );
+    });
+  };
+
   return (
-    <>
-      <div
-        id="block"
-        className="absolute left-[100px] w-[100px] h-[100px] bg-red-500"></div>
-      <div id="wrap">
-        <div
-          id="indicator"
-          className={`absolute top-[100px] w-[100px] h-[10px] bg-blue-500 left-0`}></div>
-        <div
-          id="indicator"
-          className={`absolute top-[200px] w-[100px] h-[10px] bg-blue-500 left-0 `}></div>
-        <div
-          id="indicator"
-          className={`absolute top-[300px] w-[100px] h-[10px] bg-blue-500 left-0 `}></div>
-        <div
-          id="indicator"
-          className={`absolute top-[400px] w-[100px] h-[10px] bg-blue-500 left-0 `}></div>
-        <div
-          id="indicator"
-          className={`absolute top-[500px] w-[100px] h-[10px] bg-blue-500 left-0 `}></div>
-      </div>
-      <div className="fixed inset-0 left-0 z-0">
-        <Canvas frameloop="always">
-          <Frame />
-        </Canvas>
-      </div>
-    </>
+    <main>
+      <motion.div
+        initial={{ scale: 0.23 }}
+        animate={conatinerControl}
+        className="fixed inset-0 flex justify-center items-center scale-[0.23] z-20">
+        <div className="h-[600vh] flex items-stretch gap-20">
+          <div className="flex flex-col justify-start">
+            <motion.div
+              initial={{ height: "350%", y: "70%" }}
+              animate={columnControl}
+              className="height-[350%] flex-none flex flex-col justify-between items-stretch">
+              {getImages(0)}
+            </motion.div>
+          </div>
+          <div className="flex flex-col justify-end">
+            <motion.div
+              initial={{ height: "350%", y: "-40%" }}
+              animate={columnControl}
+              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
+              {getImages(1)}
+            </motion.div>
+          </div>
+          <div className="flex flex-col justify-start">
+            <motion.div
+              initial={{ height: "350%", y: "70%" }}
+              animate={columnControl}
+              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
+              {getImages(2)}
+            </motion.div>
+          </div>
+          <div className="flex flex-col justify-end">
+            <motion.div
+              initial={{ height: "350%", y: "-40%" }}
+              animate={columnControl}
+              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
+              {getImages(3)}
+            </motion.div>
+          </div>
+          <div className="flex flex-col justify-start">
+            <motion.div
+              initial={{ height: "350%", y: "70%" }}
+              animate={columnControl}
+              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
+              {getImages(4)}
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+      <motion.div
+        initial={{ display: "none", opacity: 0 }}
+        animate={contentControl}>
+        <HomePage />
+        <DataCarousel />
+        <MagazineGrid />
+        <Articles />
+        <Merchendise />
+        <DownloadApp />
+      </motion.div>
+    </main>
   );
 }
-
-// useEffect(() => {
-//   const block = document.getElementById("block")!;
-//   const wrap = document.getElementById("wrap")!;
-//   const indicators = document.querySelectorAll("#indicator")!;
-//   const handleWheele = (e: WheelEvent) => {
-//     speed += e.deltaY * 0.0003;
-//   };
-//   window.addEventListener("wheel", handleWheele);
-
-//   // const raf = () => {
-//   //   position += speed;
-//   //   speed *= 0.9;
-
-//   //   objDistances.forEach((obj, i) => {
-//   //     obj.distance = 1 - Math.min(Math.abs(position - i), 1);
-//   //     // @ts-ignore
-//   //     indicators[i].style.transform = `scaleX(${1 + obj.distance})`;
-//   //   });
-
-//   //   rounded = Math.round(position);
-
-//   //   let diff = rounded - position;
-
-//   //   position += diff * 0.1;
-
-//   //   // block.style.transform = `translateY(${position * 100 + 50}px)`;
-//   //   wrap.style.transform = `translateY(${-position * 100 + 50}px)`;
-//   //   if (imageRefs.current && imageRefs.current.length > 0) {
-//   //     imageRefs.current.forEach((ref, i) => {
-//   //       // @ts-ignore
-//   //       imageRefs.current[i].position.y = position * 1.66 + i;
-//   //       // @ts-ignore
-//   //       imageRefs.current[i].scale.y = 1.33 + objDistances[i].distance * 0.33;
-//   //     });
-//   //   }
-//   //   window.requestAnimationFrame(raf);
-//   // };
-//   // raf();
-
-//   return () => {
-//     window.removeEventListener("wheel", handleWheele);
-//   };
-// }, []);
