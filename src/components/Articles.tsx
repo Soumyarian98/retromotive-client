@@ -5,6 +5,15 @@ import Tilt from "react-parallax-tilt";
 import SectionWrapper from "./SectionWrapper";
 import { motion } from "framer-motion";
 import { textVariant } from "@/utils/motion";
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 const data = [
   {
@@ -26,43 +35,66 @@ const data = [
 
 const Articles = () => {
   return (
-    <div className="w-full flex flex-col gap-12 container justify-center py-[2vw]">
-      <motion.h2
-        variants={textVariant(0.25)}
-        className="text-4xl font-extrabold text-center">
-        ARTICLES
-      </motion.h2>
-      <div className="grid grid-cols-3 gap-8">
-        {data.map(item => {
-          return (
-            <Tilt key={item.id}>
-              <div className="w-full h-full relative rounded-lg overflow-hidden">
-                <img src={item.image} className="w-full h-auto" />
-                <div
-                  style={{
-                    background:
-                      "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.2), rgba(0,0,0,0.4), rgba(0,0,0,0.6), rgba(0,0,0,0.8))",
-                  }}
-                  className="w-full p-6 shadow-md flex flex-col items-center gap-4 bottom-0 absolute">
-                  <p className="text-2xl text-center text-white">
-                    {item.title}
-                  </p>
-                  <button
-                    type="button"
-                    className="uppercase text-white bg-black focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-md text-sm px-5 py-2.5 mr-2 mb-2">
-                    Read Article
-                  </button>
-                </div>
-              </div>
-            </Tilt>
-          );
-        })}
-      </div>
-      <div className="flex gap-2 items-center justify-center">
-        <button className="uppercase">View All Article</button>
-        <SlArrowRightCircle className="text-3xl" />
-      </div>
-    </div>
+    <Container maxWidth="lg">
+      <Stack
+        justifyContent="center"
+        sx={{
+          py: "2vw",
+        }}
+        gap={6}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center">
+          <Typography variant="h4" fontWeight={800}>
+            ARTICLES
+          </Typography>
+          <Button
+            variant="outlined"
+            color="secondary"
+            endIcon={<SlArrowRightCircle />}>
+            View All Article
+          </Button>
+        </Stack>
+        <Grid container spacing={4}>
+          {data.map(item => {
+            return (
+              <Grid item lg={4} key={item.id}>
+                <Tilt key={item.id}>
+                  <Card sx={{ position: "relative" }}>
+                    <Box
+                      component="img"
+                      src={item.image}
+                      sx={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                    />
+                    <Stack
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        p: 3,
+                        background:
+                          "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.2), rgba(0,0,0,0.4), rgba(0,0,0,0.6), rgba(0,0,0,0.8))",
+                      }}
+                      gap={3}
+                      alignItems="center">
+                      <Typography variant="h5" textAlign="center">
+                        {item.title}
+                      </Typography>
+                      <Button variant="contained" size="large">
+                        Read Article
+                      </Button>
+                    </Stack>
+                  </Card>
+                </Tilt>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Stack>
+    </Container>
   );
 };
 

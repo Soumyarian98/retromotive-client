@@ -4,6 +4,7 @@ import DownloadApp from "@/components/DownloadApp";
 import HomePage from "@/components/HomePage";
 import MagazineGrid from "@/components/MagazineGrid";
 import Merchendise from "@/components/Merchendise";
+import { Box, Stack } from "@mui/material";
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect } from "react";
 
@@ -47,74 +48,91 @@ export default function Home() {
   const getImages = (index: number) => {
     return new Array(5).fill(0).map((_, i) => {
       return (
-        <div key={i} className="w-screen h-screen overflow-hidden relative">
+        <Box
+          component="div"
+          key={i}
+          sx={{
+            width: "100vw",
+            height: "100vh",
+            overflow: "hidden",
+            position: "relative",
+          }}>
           {index === 2 && i === 2 ? (
-            <motion.img
+            <Box
+              component={motion.img}
+              src="https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order1-1.jpg"
               initial={{ scale: 2 }}
               animate={{
                 scale: 1,
                 transition: { duration: 1.5, delay: 2.5 },
               }}
-              src="https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order1-1.jpg"
-              className="w-full h-full object-cover"
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />
           ) : (
-            <img src={imageUrls[i]} className="w-full h-full object-cover" />
+            <Box
+              component="img"
+              src={imageUrls[i]}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
           )}
-        </div>
+        </Box>
       );
     });
   };
 
   return (
-    <main>
-      <motion.div
+    <main style={{ minHeight: "200vh" }}>
+      <Box
+        component={motion.div}
         initial={{ scale: 0.23 }}
         animate={conatinerControl}
-        className="fixed inset-0 flex justify-center items-center scale-[0.23] z-20">
-        <div className="h-[600vh] flex items-stretch gap-20">
-          <div className="flex flex-col justify-start">
-            <motion.div
-              initial={{ height: "350%", y: "70%" }}
-              animate={columnControl}
-              className="height-[350%] flex-none flex flex-col justify-between items-stretch">
-              {getImages(0)}
-            </motion.div>
-          </div>
-          <div className="flex flex-col justify-end">
-            <motion.div
-              initial={{ height: "350%", y: "-40%" }}
-              animate={columnControl}
-              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
-              {getImages(1)}
-            </motion.div>
-          </div>
-          <div className="flex flex-col justify-start">
-            <motion.div
-              initial={{ height: "350%", y: "70%" }}
-              animate={columnControl}
-              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
-              {getImages(2)}
-            </motion.div>
-          </div>
-          <div className="flex flex-col justify-end">
-            <motion.div
-              initial={{ height: "350%", y: "-40%" }}
-              animate={columnControl}
-              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
-              {getImages(3)}
-            </motion.div>
-          </div>
-          <div className="flex flex-col justify-start">
-            <motion.div
-              initial={{ height: "350%", y: "70%" }}
-              animate={columnControl}
-              className="h-[350%] flex-none flex flex-col justify-between items-stretch">
-              {getImages(4)}
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
+        sx={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 10,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          transform: "scale(0.23)",
+        }}>
+        <Box
+          component="div"
+          sx={{
+            height: "600vh",
+            display: "flex",
+            alignItems: "stretch",
+            gap: "80px",
+          }}>
+          {new Array(5).fill(0).map((_, i) => {
+            return (
+              <Stack
+                key={i}
+                justifyContent={i % 2 === 0 ? "flex-start" : "flex-end"}>
+                <Stack
+                  component={motion.div}
+                  initial={{ height: "350%", y: i % 2 === 0 ? "70%" : "-40%" }}
+                  animate={columnControl}
+                  sx={{
+                    height: "350%",
+                    flex: "none",
+                  }}
+                  justifyContent="space-between"
+                  alignItems="stretch">
+                  {getImages(i)}
+                </Stack>
+              </Stack>
+            );
+          })}
+        </Box>
+      </Box>
       <motion.div
         initial={{ display: "none", opacity: 0 }}
         animate={contentControl}>
@@ -123,7 +141,11 @@ export default function Home() {
         <MagazineGrid />
         <Articles />
         <Merchendise />
-        <DownloadApp />
+
+        {/*
+       
+        <Merchendise />
+        <DownloadApp /> */}
       </motion.div>
     </main>
   );

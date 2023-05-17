@@ -3,6 +3,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SlArrowRightCircle } from "react-icons/sl";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { nanoid } from "nanoid";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  MobileStepper,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 const variant = {
   initial: { y: "200%", opacity: 0 },
@@ -56,51 +67,70 @@ const DataCarousel = () => {
   }, [index]);
 
   return (
-    <div className="container min-h-screen flex flex-col justify-center gap-8 py-[2vw]">
-      <div className="grid grid-cols-2 gap-8 w-full">
-        <div className="w-full h-full flex flex-col justify-center">
-          <AnimatePresence mode="wait">
-            {data.map((item, i) => {
-              if (i !== index) return null;
-              return (
-                <div key={item.id} className="w-8/12">
-                  <div className="overflow-hidden">
-                    <motion.h2
-                      variants={variant}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      className="font-bold text-lg">
-                      {item.title}
-                    </motion.h2>
-                  </div>
-                  <div className="overflow-hidden">
-                    <motion.p
-                      variants={variant}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      className="mt-4">
-                      {item.description}
-                    </motion.p>
-                  </div>
-                  <div className="overflow-hidden">
-                    <motion.div
-                      variants={variant}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      className="flex gap-2 items-center mt-12">
-                      <button className="uppercase">{item.button}</button>
-                      <SlArrowRightCircle className="text-3xl" />
-                    </motion.div>
-                  </div>
-                </div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-        <div>
+    <Container
+      maxWidth="lg"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: "2rem",
+        py: "2vw",
+      }}>
+      <Grid container spacing={2}>
+        <Grid item lg={6}>
+          <Stack justifyContent="center" sx={{ height: "100%" }}>
+            <AnimatePresence mode="wait">
+              {data.map((item, i) => {
+                if (i !== index) return null;
+                return (
+                  <Box component="div" key={item.id} sx={{ width: "75%" }}>
+                    <Box component="div" sx={{ overflow: "hidden" }}>
+                      <Typography
+                        component={motion.p}
+                        variants={variant}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        variant="h5"
+                        fontWeight="700">
+                        {item.title}
+                      </Typography>
+                    </Box>
+                    <Box component="div" sx={{ overflow: "hidden", mt: 2 }}>
+                      <Typography
+                        component={motion.p}
+                        variants={variant}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        variant="body2"
+                        color="text.secondary">
+                        {item.description}
+                      </Typography>
+                    </Box>
+                    <Box component="div" sx={{ overflow: "hidden", mt: 6 }}>
+                      <motion.div
+                        variants={variant}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit">
+                        <Button
+                          endIcon={<SlArrowRightCircle />}
+                          size="large"
+                          color="secondary"
+                          variant="outlined">
+                          {item.button}
+                        </Button>
+                      </motion.div>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </AnimatePresence>
+          </Stack>
+        </Grid>
+        <Grid item lg={6}>
           <AnimatePresence mode="wait">
             {data.map((d, i) => {
               if (i !== index) return null;
@@ -121,41 +151,47 @@ const DataCarousel = () => {
                     maskImage: hiddenMask,
                     transition: { duration: 0.75, ease: "easeInOut" },
                   }}>
-                  <img src={d.image} className="w-full height-auto" />
+                  <Box
+                    component="img"
+                    src={d.image}
+                    sx={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  />
                 </motion.div>
               );
             })}
           </AnimatePresence>
-        </div>
-      </div>
-      <div className="flex justify-between items-center gap-2">
-        <div>
-          <button
-            className="rounded-full text-3xl"
-            onClick={() => setIndex(p => (p === 0 ? data.length - 1 : p - 1))}>
-            <FiChevronLeft />
-          </button>
-        </div>
-        <div className="flex justify-center gap-4">
-          {data.map((_, i) => (
-            <button
-              key={nanoid()}
-              onClick={() => setIndex(i)}
-              className={`w-4 h-4 rounded-full ${
-                i === index ? "bg-black" : "bg-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-        <div>
-          <button
-            className="rounded-full text-3xl"
-            onClick={() => setIndex(p => (p === data.length - 1 ? 0 : p + 1))}>
-            <FiChevronRight />
-          </button>
-        </div>
-      </div>
-    </div>
+        </Grid>
+      </Grid>
+      <Paper>
+        <MobileStepper
+          variant="dots"
+          steps={2}
+          position="static"
+          activeStep={index}
+          nextButton={
+            <IconButton
+              size="large"
+              onClick={() =>
+                setIndex(p => (p === data.length - 1 ? 0 : p + 1))
+              }>
+              <FiChevronRight />
+            </IconButton>
+          }
+          backButton={
+            <IconButton
+              size="large"
+              onClick={() =>
+                setIndex(p => (p === 0 ? data.length - 1 : p - 1))
+              }>
+              <FiChevronLeft />
+            </IconButton>
+          }
+        />
+      </Paper>
+    </Container>
   );
 };
 

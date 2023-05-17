@@ -1,7 +1,8 @@
 import { AnimatePresence } from "framer-motion";
 import { nanoid } from "nanoid";
-import React, { useEffect, useLayoutEffect } from "react";
+import React from "react";
 import { motion } from "framer-motion";
+import { Box } from "@mui/material";
 
 const data = [
   {
@@ -50,13 +51,17 @@ const HomePage = () => {
   }, [currentSlide]);
 
   return (
-    <div className="h-screen overflow-hidden">
+    <Box component="div" sx={{ height: "100vh", overflow: "hidden" }}>
       <AnimatePresence mode="wait">
         {data.map((item, index) => {
           if (index !== currentSlide) return null;
           return (
-            <div key={item.id} className="relative h-full">
-              <motion.img
+            <Box
+              component="div"
+              sx={{ position: "relative", height: "100%" }}
+              key={item.id}>
+              <Box
+                component={motion.img}
                 initial={{
                   opacity: 0,
                 }}
@@ -70,7 +75,7 @@ const HomePage = () => {
                 }}
                 src={item.imageUrl}
                 alt={item.id}
-                className="w-full h-full object-cover"
+                sx={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
               {/* <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center p-12">
                 <h1 className="text-6xl font-extrabold text-white">
@@ -79,11 +84,11 @@ const HomePage = () => {
                 <p>{item.subtitle}</p>
                 <button className="btn-filled">{item.buttonTitle}</button>
               </div> */}
-            </div>
+            </Box>
           );
         })}
       </AnimatePresence>
-    </div>
+    </Box>
   );
 };
 
