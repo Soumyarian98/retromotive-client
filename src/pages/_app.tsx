@@ -1,9 +1,13 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Montserrat } from "next/font/google";
+import { Montserrat, Mulish } from "next/font/google";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
 const font = Montserrat({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+});
+const mulish = Mulish({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
@@ -13,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <style jsx global>{`
         html {
-          font-family: ${font.style.fontFamily};
+          font-family: ${font.style.fontFamily}, ${mulish.style.fontFamily};
         }
       `}</style>
       <ThemeProvider
@@ -28,7 +32,10 @@ export default function App({ Component, pageProps }: AppProps) {
             },
           },
           typography: {
-            fontFamily: font.style.fontFamily,
+            fontFamily: mulish.style.fontFamily,
+            subtitle1: {
+              fontFamily: font.style.fontFamily,
+            },
           },
         })}>
         <CssBaseline />

@@ -1,6 +1,7 @@
 import Articles from "@/components/Articles";
 import DataCarousel from "@/components/DataCarousel";
 import DownloadApp from "@/components/DownloadApp";
+import ExploreCars from "@/components/ExploreCars";
 import HomePage from "@/components/HomePage";
 import MagazineGrid from "@/components/MagazineGrid";
 import Merchendise from "@/components/Merchendise";
@@ -137,6 +138,7 @@ export default function Home() {
         initial={{ display: "none", opacity: 0 }}
         animate={contentControl}>
         <HomePage />
+        <ExploreCars />
         <DataCarousel />
         <MagazineGrid />
         <Articles />
