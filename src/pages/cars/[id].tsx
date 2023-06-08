@@ -55,6 +55,7 @@ import { GiCarWheel } from "react-icons/gi";
 import { nanoid } from "nanoid";
 import HorizontalScrollSection from "@/components/car-details/HorizontalScrollSection";
 import CarDetailsContent from "@/components/car-details/CarDetailsContent";
+import CarSummery from "@/components/car-details/CarSummery";
 
 export const carFeatures = [
   { id: nanoid(), label: "Color", value: "Red" },
@@ -158,6 +159,8 @@ const CarDetails = () => {
       </Box>
 
       <HorizontalScrollSection
+        sectionName="Car Details"
+        sectionIndex={1}
         title="Exterior Features"
         imageArray={exteriorImages}
       />
@@ -165,10 +168,15 @@ const CarDetails = () => {
       <CarDetailsContent />
 
       <HorizontalScrollSection
+        sectionName="Interior"
+        sectionIndex={2}
         title="Interior Features"
         imageArray={interiorImages}
       />
+      <CarSummery />
       <HorizontalScrollSection
+        sectionName="Mechanical"
+        sectionIndex={3}
         title="Mechnical Features"
         imageArray={mechanicalImages}
       />

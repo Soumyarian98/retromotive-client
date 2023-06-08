@@ -50,9 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
               fontFamily: font1.style.fontFamily,
             },
           },
-          shape: {
-            borderRadius: 10,
-          },
+
           shadows: [
             "none",
             "0px 1px 2px rgba(0, 0, 0, 0.08)",

@@ -12,6 +12,7 @@ import {
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
+  Stack,
   Tab,
   Tabs,
   Typography,
@@ -26,6 +27,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { nanoid } from "nanoid";
 import Carousel from "react-multi-carousel";
 import { exteriorImages } from "@/data/carDetails";
+import SectionName from "../SectionName";
 
 const responsive = {
   superLargeDesktop: {
@@ -118,14 +120,18 @@ const CarDetailsContent = () => {
   const [value, setValue] = React.useState(0);
   return (
     <Container maxWidth="lg" sx={{ minHeight: "100vh", py: 10 }}>
-      <Typography
-        variant="h4"
-        fontWeight={800}
-        textTransform="uppercase"
-        sx={{ mb: 4 }}
-        textAlign="center">
-        SPECIFICATIONS
-      </Typography>
+      <Stack alignItems="center" mb={4}>
+        <div>
+          <SectionName sectionIndex={3} sectionName="Details" />
+          <Typography
+            variant="h4"
+            fontWeight={800}
+            textTransform="uppercase"
+            sx={{ mt: 0.5 }}>
+            SPECIFICATIONS
+          </Typography>
+        </div>
+      </Stack>
       {[engine, bodywork, interior, driveline].map((section, i) => {
         return (
           <Accordion

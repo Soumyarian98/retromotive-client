@@ -23,10 +23,13 @@ import { FiArrowRight, FiChevronRight, FiX } from "react-icons/fi";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import LightGallery from "./LightGallery";
+import SectionName from "../SectionName";
 
 interface Props {
   title: string;
   imageArray: string[];
+  sectionIndex: number;
+  sectionName: string;
 }
 
 const responsive = {
@@ -52,7 +55,12 @@ const responsive = {
   },
 };
 
-const HorizontalScrollSection = ({ imageArray, title }: Props) => {
+const HorizontalScrollSection = ({
+  imageArray,
+  title,
+  sectionName,
+  sectionIndex,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const lightGalleryRef = useRef<any>(null);
 
@@ -93,22 +101,7 @@ const HorizontalScrollSection = ({ imageArray, title }: Props) => {
         </Carousel>
 
         <Box component="div" position="absolute" top="10%" left={"5%"}>
-          <Stack direction="row" alignItems="center">
-            <strong>1</strong>
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                maxWidth: "100px",
-                width: "70%",
-                height: "1px",
-                minWidth: "10px",
-                margin: "10px",
-              }}>
-              <i style={{ border: "1px solid white", width: "100%" }}></i>
-            </span>
-            <strong>INTRO</strong>
-          </Stack>
+          <SectionName sectionIndex={sectionIndex} sectionName={sectionName} />
           <Typography
             mt={0.5}
             color="white"

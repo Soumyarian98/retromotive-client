@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Chip,
@@ -19,6 +20,7 @@ import { FaChevronCircleRight } from "react-icons/fa";
 import { GiCarWheel } from "react-icons/gi";
 import useCarousel from "@/hooks/useCarousel";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
 
 const CarMedias = ({ images }: { images: string[] }) => {
   const { index, next } = useCarousel(images.length);
@@ -59,10 +61,13 @@ const CarMedias = ({ images }: { images: string[] }) => {
 const CarCard = ({ item }: any) => {
   const audioRef = React.useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const router = useRouter();
   return (
-    <Card elevation={1} sx={{ borderRadius: 4 }}>
+    <Card elevation={1}>
       <Box component="div" sx={{ position: "relative", overflow: "hidden" }}>
-        <CarMedias images={item.imageUrls} />
+        <CardActionArea onClick={() => router.push(`/cars/1`)}>
+          <CarMedias images={item.imageUrls} />
+        </CardActionArea>
         <IconButton sx={{ position: "absolute", top: 4, right: 4, zIndex: 10 }}>
           <FiHeart stroke="#fff" fill={"#00000040"} />
         </IconButton>
