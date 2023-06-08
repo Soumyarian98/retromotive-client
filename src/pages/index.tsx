@@ -5,6 +5,8 @@ import ExploreCars from "@/components/ExploreCars";
 import HomePage from "@/components/HomePage";
 import MagazineGrid from "@/components/MagazineGrid";
 import Merchendise from "@/components/Merchendise";
+import Navbar from "@/components/Navbar";
+import MagazineSubscription from "@/sections/homepage/MagazineSubscription";
 import { Box, Stack } from "@mui/material";
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect } from "react";
@@ -137,12 +139,14 @@ export default function Home() {
       <motion.div
         initial={{ display: "none", opacity: 0 }}
         animate={contentControl}>
+        <Navbar />
         <HomePage />
         <ExploreCars />
         <DataCarousel />
         <MagazineGrid />
         <Articles />
         <Merchendise />
+        <MagazineSubscription />
 
         {/*
        
