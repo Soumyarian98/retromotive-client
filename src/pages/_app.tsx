@@ -1,21 +1,39 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Montserrat, Nunito } from "next/font/google";
+import { Montserrat, Mulish } from "next/font/google";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import "react-multi-carousel/lib/styles.css";
+import GlobalLayout from "@/layout/GlobalLayout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Router } from "next/router";
+import { ClerkProvider } from "@clerk/nextjs";
+import {
+  PageLoadingSpinner,
+  closePageLoader,
+  showPageLoader,
+} from "@/components/PageLoader";
 
 const font1 = Montserrat({
   weight: ["400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
-const font2 = Nunito({
+const font2 = Mulish({
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
+Router.events.on("routeChangeStart", () => {
+  showPageLoader();
+});
+Router.events.on("routeChangeComplete", ({}) => {
+  closePageLoader();
+});
+
+const queryClient = new QueryClient();
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <ClerkProvider {...pageProps}>
       <style jsx global>{`
         html {
           font-family: ${font2.style.fontFamily}, ${font1.style.fontFamily};
@@ -25,6 +43,14 @@ export default function App({ Component, pageProps }: AppProps) {
         theme={createTheme({
           palette: {
             // mode: "dark",
+            primary: {
+              main: "#103fef",
+            },
+            // secondary: {
+            //   dark: "#b2102f",
+            //   main: "#ff1744",
+            //   light: "#ff4569",
+            // },
           },
           typography: {
             fontFamily: font2.style.fontFamily,
@@ -48,6 +74,9 @@ export default function App({ Component, pageProps }: AppProps) {
             },
             h6: {
               fontFamily: font1.style.fontFamily,
+            },
+            button: {
+              textTransform: "capitalize",
             },
           },
 
@@ -80,8 +109,13 @@ export default function App({ Component, pageProps }: AppProps) {
           ],
         })}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <GlobalLayout>
+            <Component {...pageProps} />
+          </GlobalLayout>
+          <PageLoadingSpinner />
+        </QueryClientProvider>
       </ThemeProvider>
-    </>
+    </ClerkProvider>
   );
 }

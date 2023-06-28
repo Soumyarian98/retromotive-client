@@ -59,69 +59,65 @@ const subscriptions = {
 
 const MagazineSubscription = () => {
   return (
-    <Box component="main" sx={{ flexGrow: 1 }}>
-      <Box
-        component="div"
-        sx={{
-          backgroundColor: theme =>
-            theme.palette.mode === "dark" ? grey[800] : grey[50],
-          minHeight: "100vh",
-          py: "60px",
-        }}>
-        <Container maxWidth="lg">
-          <Box
-            component="div"
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "column",
-              mb: 4,
-            }}>
-            <Typography variant="h3" fontWeight={600}>
-              {subscriptions.title}
-            </Typography>
-            <Typography
-              component="p"
-              color="text.secondary"
-              sx={{ my: 2 }}
-              variant="body1"
-              textAlign="center"
-              dangerouslySetInnerHTML={{ __html: subscriptions.subtitle }}
-            />
-          </Box>
-          <Grid container spacing={4}>
-            {subscriptions.plans.map(plan => (
-              <Grid xs={12} md={6} key={plan.id}>
-                <PricingPlan
-                  popular={plan.popular}
-                  cta="Subscribe Now"
-                  currency={plan.currency}
-                  description={plan.description}
-                  features={plan.features}
-                  icon={null}
-                  name={plan.name}
-                  price={plan.pricing}
-                  sx={{
-                    height: "100%",
-                    mx: "auto",
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
-          <Box component="div" sx={{ mt: 4 }}>
-            <Typography
-              align="center"
-              color="text.secondary"
-              component="p"
-              variant="caption">
-              30% of our income goes into Whale Charity
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-      <Divider />
-      {/* <PricingFaqs /> */}
+    <Box
+      component="div"
+      sx={{
+        backgroundColor: theme =>
+          theme.palette.mode === "dark" ? grey[800] : grey[50],
+        mt: 2,
+      }}>
+      <Container maxWidth="lg">
+        <Box
+          component="div"
+          sx={{
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            mb: 4,
+          }}>
+          <Typography variant="h3" fontWeight={600}>
+            {subscriptions.title}
+          </Typography>
+          <Typography
+            component="p"
+            color="text.secondary"
+            sx={{ my: 2 }}
+            variant="body1"
+            textAlign="center"
+            dangerouslySetInnerHTML={{ __html: subscriptions.subtitle }}
+          />
+        </Box>
+        <Grid container spacing={4}>
+          {subscriptions.plans.map(plan => (
+            <Grid xs={12} md={6} key={plan.id}>
+              <PricingPlan
+                popular={plan.popular}
+                cta="Subscribe Now"
+                currency={plan.currency}
+                description={plan.description}
+                features={plan.features}
+                icon={null}
+                name={plan.name}
+                price={plan.pricing}
+                sx={{
+                  height: "100%",
+                  mx: "auto",
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+        <Box component="div" sx={{ mt: 4 }}>
+          <Typography
+            align="center"
+            color="text.secondary"
+            component="p"
+            variant="caption">
+            * All prices are in USD. You can cancel your subscription at any
+            time.
+          </Typography>
+        </Box>
+      </Container>
     </Box>
   );
 };

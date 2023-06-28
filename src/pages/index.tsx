@@ -6,8 +6,9 @@ import HomePage from "@/components/HomePage";
 import MagazineGrid from "@/components/MagazineGrid";
 import Merchendise from "@/components/Merchendise";
 import Navbar from "@/components/Navbar";
+import HomeBanner from "@/sections/homepage/HomeBanner";
 import MagazineSubscription from "@/sections/homepage/MagazineSubscription";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Toolbar } from "@mui/material";
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect } from "react";
 
@@ -92,7 +93,7 @@ export default function Home() {
   };
 
   return (
-    <main style={{ minHeight: "200vh" }}>
+    <Box component="main" sx={{ minHeight: "200vh" }}>
       <Box
         component={motion.div}
         initial={{ scale: 0.23 }}
@@ -140,19 +141,25 @@ export default function Home() {
         initial={{ display: "none", opacity: 0 }}
         animate={contentControl}>
         <Navbar />
+        <Box component="div" sx={{ mt: 10 }} />
+        {/* <HomeBanner /> */}
+        <DataCarousel />
+        <MagazineGrid />
+
+        {/* <Toolbar />
         <HomePage />
         <ExploreCars />
         <DataCarousel />
         <MagazineGrid />
         <Articles />
         <Merchendise />
-        <MagazineSubscription />
+        <MagazineSubscription /> */}
 
         {/*
        
         <Merchendise />
         <DownloadApp /> */}
       </motion.div>
-    </main>
+    </Box>
   );
 }

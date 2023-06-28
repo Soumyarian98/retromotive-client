@@ -36,22 +36,8 @@ let initialRender = true;
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
-  React.useEffect(() => {
-    const interval = setInterval(
-      () => {
-        initialRender = false;
-        setCurrentSlide(prev => {
-          if (prev === data.length - 1) return 0;
-          return prev + 1;
-        });
-      },
-      initialRender ? 10000 : 5000
-    );
-    return () => clearInterval(interval);
-  }, [currentSlide]);
-
   return (
-    <Box component="div" sx={{ height: "100vh", overflow: "hidden" }}>
+    <Box component="div" sx={{ height: "auto", overflow: "hidden" }}>
       <AnimatePresence mode="wait">
         {data.map((item, index) => {
           if (index !== currentSlide) return null;

@@ -54,7 +54,7 @@ const data = [
 const MagazineGrid = () => {
   const { palette: p } = useTheme();
   return (
-    <Box component="div">
+    <Box component="section">
       <Container maxWidth="lg">
         <Stack
           justifyContent="center"
