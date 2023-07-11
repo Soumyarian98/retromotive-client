@@ -1,6 +1,7 @@
 import {
   AppBar,
   Box,
+  Button,
   Container,
   Divider,
   Drawer,
@@ -13,11 +14,12 @@ import {
 } from "@mui/material";
 import React from "react";
 import Logo from "./Logo";
-import { FiMenu, FiUser, FiX } from "react-icons/fi";
+import { FiLogIn, FiMenu, FiUser, FiX } from "react-icons/fi";
 import { grey } from "@mui/material/colors";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import CartButton from "./CartButton";
+import { UserButton, SignInButton, useUser } from "@clerk/clerk-react";
 
 const menus = [
   {
@@ -43,6 +45,7 @@ const menus = [
 ];
 
 const Navbar = () => {
+  const { isSignedIn } = useUser();
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
 
@@ -77,9 +80,13 @@ const Navbar = () => {
               direction="row"
               alignItems="center"
               spacing={{ xs: 1, md: 2 }}>
-              <IconButton color="primary">
-                <FiUser />
-              </IconButton>
+              {isSignedIn ? (
+                <UserButton />
+              ) : (
+                <SignInButton mode="modal">
+                  <Button sx={{ textTransform: "uppercase" }}>Login</Button>
+                </SignInButton>
+              )}
               <CartButton />
               <IconButton
                 color="secondary"
