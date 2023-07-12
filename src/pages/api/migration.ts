@@ -1,10 +1,9 @@
+import axios from "axios";
 import { PrintifyWebhookPayload } from "@/types/product-migration-types/printify-webhook-payload";
 import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
 import { PrintifyProductEntity } from "@/types/product-migration-types/printify-product-response";
 import { PrintifyShippingProfileResponse } from "@/types/product-migration-types/prinitify-shipping-profile-response";
 import { nanoid } from "nanoid";
-import { client } from "../../../sanity/lib/client";
 
 const prinitifyApiKey =
   "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM1ZmUxMWU5YTgwM2FiN2VlYjNjY2M5NyIsImp0aSI6IjY4YWM5ZWIyOTFhN2ZkYjRhZjg1ZGM4NTIzMjA5N2YxM2FkYzk4ODViMjgyNTZlNzUyNmU3M2NlNmY1OTNhNmIwZGRjZTlkMTUzZmJjYWMwIiwiaWF0IjoxNjg4MDA4ODgyLjM4MDg1NSwibmJmIjoxNjg4MDA4ODgyLjM4MDg1OSwiZXhwIjoxNzE5NjMxMjgyLjM3NDY2NCwic3ViIjoiOTQ2OTM3NyIsInNjb3BlcyI6WyJzaG9wcy5tYW5hZ2UiLCJzaG9wcy5yZWFkIiwiY2F0YWxvZy5yZWFkIiwib3JkZXJzLnJlYWQiLCJvcmRlcnMud3JpdGUiLCJwcm9kdWN0cy5yZWFkIiwicHJvZHVjdHMud3JpdGUiLCJ3ZWJob29rcy5yZWFkIiwid2ViaG9va3Mud3JpdGUiLCJ1cGxvYWRzLnJlYWQiLCJ1cGxvYWRzLndyaXRlIiwicHJpbnRfcHJvdmlkZXJzLnJlYWQiXX0.AQpPZnEFVkq2poah2KdnKfi7lD0aMEyPBbIEHxJhb4pjqj8XcanQCNFGYc8kwbIJHV1-sg9eLBENv1NeN70";
@@ -22,6 +21,7 @@ const transformProduct = (
   });
   const allVariantIds = allVariants.map(v => v.id);
   return {
+    _id: p.id,
     _type: "product",
     printifyId: p.id,
     title: p.title,
@@ -45,8 +45,8 @@ const transformProduct = (
     shippingProfileEntities: shippingData.profiles.map(s => {
       return {
         _key: nanoid(),
-        firstItemCost: s.first_item.cost,
-        additionalItemsCost: s.additional_items.cost,
+        firstItemCost: (s.first_item.cost / 100).toFixed(2),
+        additionalItemsCost: (s.additional_items.cost / 100).toFixed(2),
         countries: s.countries,
         allowedVariantIds: s.variant_ids.filter(id =>
           allVariantIds.includes(id)
@@ -60,7 +60,7 @@ const transformProduct = (
           _key: nanoid(),
           title: v.title,
           sku: v.sku,
-          price: v.price,
+          price: (v.price / 100).toFixed(2),
           printifyId: v.id,
           attributeEntities: v.options,
         };
@@ -75,7 +75,7 @@ export default async function handler(
   const {
     resource: {
       id,
-      data: { shop_id },
+      data: { shop_id, action },
     },
   } = req.body as PrintifyWebhookPayload;
 
@@ -97,9 +97,10 @@ export default async function handler(
   const shippingData = shippingProfile.data;
 
   const sanityProductEntity = transformProduct(productEntity, shippingData);
+
   const data = await axios.post(
     `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
-    { mutations: [{ create: sanityProductEntity }] },
+    { mutations: [{ createIfNotExists: sanityProductEntity }] },
     {
       headers: {
         "Content-type": "application/json",
