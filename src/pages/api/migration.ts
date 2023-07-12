@@ -100,7 +100,7 @@ export default async function handler(
 
   const data = await axios.post(
     `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
-    { mutations: [{ createIfNotExists: sanityProductEntity }] },
+    { mutations: [{ create: sanityProductEntity }] },
     {
       headers: {
         "Content-type": "application/json",

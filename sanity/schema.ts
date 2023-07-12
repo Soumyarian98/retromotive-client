@@ -4,7 +4,8 @@ import article from "./schemas/article";
 import product from "./schemas/product";
 import policy from "./schemas/policy";
 import blockContent from "./schemas/blockContent";
+import magazine from "./schemas/magazine";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [category, product, article, policy, blockContent],
+  types: [category, product, magazine, article, policy, blockContent],
 };
