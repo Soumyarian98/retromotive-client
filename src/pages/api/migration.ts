@@ -13,9 +13,14 @@ const transformProduct = (
   p: PrintifyProductEntity,
   shippingData: PrintifyShippingProfileResponse
 ) => {
-  const allVariantIds = p.variants
-    .filter(v => v.is_available && v.is_enabled)
-    .map(v => v.id);
+  const variantOptions = new Set<number>();
+  const allVariants = p.variants.filter(v => v.is_available && v.is_enabled);
+  allVariants.forEach(v => {
+    v.options.forEach(o => {
+      variantOptions.add(o);
+    });
+  });
+  const allVariantIds = allVariants.map(v => v.id);
   return {
     _type: "product",
     printifyId: p.id,
@@ -24,14 +29,17 @@ const transformProduct = (
       return {
         name: a.name,
         _key: nanoid(),
-        attributeEntities: a.values.map(v => {
-          return {
-            _key: nanoid(),
-            printifyId: v.id,
-            value: v.title,
-            color: v.colors ? v.colors[0] : undefined,
-          };
-        }),
+        attributeEntities: a.values
+          .map(v => {
+            if (!variantOptions.has(v.id)) return null;
+            return {
+              _key: nanoid(),
+              printifyId: v.id,
+              value: v.title,
+              color: v.colors ? v.colors[0] : undefined,
+            };
+          })
+          .filter(v => v !== null),
       };
     }),
     shippingProfileEntities: shippingData.profiles.map(s => {

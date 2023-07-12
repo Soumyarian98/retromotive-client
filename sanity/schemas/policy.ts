@@ -17,11 +17,6 @@ export default defineType({
       options: { source: "title" },
     }),
     defineField({
-      name: "tabTitle",
-      title: "Tab Title",
-      type: "string",
-    }),
-    defineField({
       name: "content",
       title: "Content",
       type: "array",
@@ -30,12 +25,10 @@ export default defineType({
           type: "object",
           fields: [
             { type: "string", name: "title" },
-            { type: "text", name: "description" },
             {
-              title: "Formatted Description",
-              name: "formattedDescription",
-              type: "array",
-              of: [{ type: "block" }],
+              title: "Description",
+              name: "description",
+              type: "blockContent",
             },
           ],
         },
