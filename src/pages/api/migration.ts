@@ -58,6 +58,7 @@ const transformProduct = (
       .map(v => {
         return {
           _key: nanoid(),
+          title: v.title,
           sku: v.sku,
           price: v.price,
           printifyId: v.id,

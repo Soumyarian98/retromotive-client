@@ -85,6 +85,7 @@ export default defineType({
           type: "object",
           fields: [
             { type: "string", name: "sku" },
+            { type: "string", name: "title" },
             { type: "number", name: "price" },
             { type: "number", name: "printifyId" },
             {
