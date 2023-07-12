@@ -10,59 +10,7 @@ import axios from "axios";
 
 const Migration = () => {
   const migrate = async () => {
-    axios
-      .post("/api/migration", webhookPayload)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    // const migrationData = samplePrintifyProducts.slice(0, 2).map(p => {
-    //   return {
-    //     _type: "product",
-    //     printifyId: p.id,
-    //     title: p.title,
-    //     attributes: p.options.map(a => {
-    //       return {
-    //         name: a.name,
-    //         attributeEntities: a.values.map(v => {
-    //           return {
-    //             printifyId: v.id,
-    //             value: v.title,
-    //             color: v.colors ? v.colors[0] : undefined,
-    //           };
-    //         }),
-    //       };
-    //     }),
-    //     variants: p.variants.map(v => {
-    //       return {
-    //         sku: v.sku,
-    //         price: v.price,
-    //         printifyId: v.id,
-    //         attributeEntities: v.options,
-    //         shippingProfileEntities: [],
-    //       };
-    //     }),
-    //   };
-    // });
-    // fetch(
-    //   `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
-    //   {
-    //     method: "post",
-    //     headers: {
-    //       "Content-type": "application/json",
-    //       Authorization: `Bearer skLvT476E8zEZNzIifYnKOi6RMnS0zycFRKCvLBunDP85U9CfFVoOR9iOg51L7J7pWxtDM3Y7wcjErFsbyEPVf4gflxBZTjtRKAuR5WlpZ84Si7JEtmOpj9hvoJrJoA7UW1Y76F5ANwIShGOfxzC4sC7nmVX4GjncaoGgkUNaEQqxvGzzdGV`,
-    //     },
-    //     body: JSON.stringify({
-    //       mutations: migrationData.map(p => ({ create: p })),
-    //     }),
-    //   }
-    // )
-    // .then(response => response.json())
-    // .then(result => console.log(result))
-    // .catch(error => console.error(error));
+    const groq = `*[_type == "product" && printifyId=""]`;
   };
   return (
     <div>
