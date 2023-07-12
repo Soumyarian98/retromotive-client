@@ -45,8 +45,10 @@ const transformProduct = (
     shippingProfileEntities: shippingData.profiles.map(s => {
       return {
         _key: nanoid(),
-        firstItemCost: (s.first_item.cost / 100).toFixed(2),
-        additionalItemsCost: (s.additional_items.cost / 100).toFixed(2),
+        firstItemCost: parseFloat((s.first_item.cost / 100).toFixed(2)),
+        additionalItemsCost: parseFloat(
+          (s.additional_items.cost / 100).toFixed(2)
+        ),
         countries: s.countries,
         allowedVariantIds: s.variant_ids.filter(id =>
           allVariantIds.includes(id)
@@ -60,7 +62,7 @@ const transformProduct = (
           _key: nanoid(),
           title: v.title,
           sku: v.sku,
-          price: (v.price / 100).toFixed(2),
+          price: parseFloat((v.price / 100).toFixed(2)),
           printifyId: v.id,
           attributeEntities: v.options,
         };
