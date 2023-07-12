@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrintifyProductEntity } from "@/types/product-migration-types/printify-product-response";
 import { PrintifyShippingProfileResponse } from "@/types/product-migration-types/prinitify-shipping-profile-response";
 import { nanoid } from "nanoid";
+import { client } from "../../../sanity/lib/client";
 
 const prinitifyApiKey =
   "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM1ZmUxMWU5YTgwM2FiN2VlYjNjY2M5NyIsImp0aSI6IjY4YWM5ZWIyOTFhN2ZkYjRhZjg1ZGM4NTIzMjA5N2YxM2FkYzk4ODViMjgyNTZlNzUyNmU3M2NlNmY1OTNhNmIwZGRjZTlkMTUzZmJjYWMwIiwiaWF0IjoxNjg4MDA4ODgyLjM4MDg1NSwibmJmIjoxNjg4MDA4ODgyLjM4MDg1OSwiZXhwIjoxNzE5NjMxMjgyLjM3NDY2NCwic3ViIjoiOTQ2OTM3NyIsInNjb3BlcyI6WyJzaG9wcy5tYW5hZ2UiLCJzaG9wcy5yZWFkIiwiY2F0YWxvZy5yZWFkIiwib3JkZXJzLnJlYWQiLCJvcmRlcnMud3JpdGUiLCJwcm9kdWN0cy5yZWFkIiwicHJvZHVjdHMud3JpdGUiLCJ3ZWJob29rcy5yZWFkIiwid2ViaG9va3Mud3JpdGUiLCJ1cGxvYWRzLnJlYWQiLCJ1cGxvYWRzLndyaXRlIiwicHJpbnRfcHJvdmlkZXJzLnJlYWQiXX0.AQpPZnEFVkq2poah2KdnKfi7lD0aMEyPBbIEHxJhb4pjqj8XcanQCNFGYc8kwbIJHV1-sg9eLBENv1NeN70";
@@ -100,16 +101,45 @@ export default async function handler(
 
   const sanityProductEntity = transformProduct(productEntity, shippingData);
 
-  const data = await axios.post(
-    `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`,
-    { mutations: [{ create: sanityProductEntity }] },
-    {
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer skxsdQTXNR64ygYCAxKXzHoPBSYZUEYsjQ8DPwMSzRSiCzsr7qccUz0Yk1nDiARgtx6vXKRIcLBciPTD63DMPIJE8uAk44WoMOoc76lSbV4JpXnrZPh63bk93AumxvvVl8ccW1YenMaJttZ7QuK4aP5q4QoqC6VKUIdnKIDi3aucsymOEtcd`,
-      },
-    }
-  );
+  const groq = `*[_type == "product" && printifyId==${sanityProductEntity._id}][0]`;
+  const product = await client.fetch(groq);
 
-  return res.status(200).json({ data: data.data });
+  const url = `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`;
+  const sanityHeaders = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${process.env.SANITY_API_TOKEN}`,
+    },
+  };
+
+  if (product.result !== null && action === "update") {
+    const data = await axios.post(
+      url,
+      {
+        mutations: [
+          {
+            patch: {
+              id: product.result._id,
+              set: {
+                title: sanityProductEntity.title,
+                attributes: sanityProductEntity.attributes,
+                shippingProfileEntities:
+                  sanityProductEntity.shippingProfileEntities,
+                variants: sanityProductEntity.variants,
+              },
+            },
+          },
+        ],
+      },
+      sanityHeaders
+    );
+    return res.status(200).json({ data: data.data });
+  } else if (product.result === null && action === "create") {
+    const data = await axios.post(
+      url,
+      { mutations: [{ create: sanityProductEntity }] },
+      sanityHeaders
+    );
+    return res.status(200).json({ data: data.data });
+  }
 }

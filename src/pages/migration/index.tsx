@@ -1,16 +1,12 @@
-import { samplePrintifyProducts } from "@/data/samplePrintifyProducts";
-import { PrintifyMigration } from "@/lib/printify-product-migration";
 import { Button } from "@mui/material";
 import React from "react";
 import { client } from "../../../sanity/lib/client";
-import { SanityProduct } from "@/types/sanity-product";
-import { webhookPayload } from "@/data/webhook-payload";
-import { PrintifyWebhookPayload } from "@/types/product-migration-types/printify-webhook-payload";
-import axios from "axios";
 
 const Migration = () => {
   const migrate = async () => {
-    const groq = `*[_type == "product" && printifyId=""]`;
+    const groq = `*[_type == "product" && printifyId=="62458980fff8f03e506d31d1"][0]`;
+    const products = await client.fetch(groq);
+    console.log(products);
   };
   return (
     <div>
