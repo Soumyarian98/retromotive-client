@@ -101,7 +101,7 @@ export default async function handler(
 
   const sanityProductEntity = transformProduct(productEntity, shippingData);
 
-  const groq = `*[_type == "product" && printifyId==${sanityProductEntity._id}][0]`;
+  const groq = `*[_type == "product" && printifyId == "${sanityProductEntity._id}"][0]`;
   const product = await client.fetch(groq);
 
   const url = `https://${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/mutate/${process.env.NEXT_PUBLIC_SANITY_DATASET}`;
@@ -112,14 +112,21 @@ export default async function handler(
     },
   };
 
-  if (product.result !== null && action === "update") {
+  if (product === null) {
+    const data = await axios.post(
+      url,
+      { mutations: [{ create: sanityProductEntity }] },
+      sanityHeaders
+    );
+    return res.status(200).json({ data: data.data });
+  } else {
     const data = await axios.post(
       url,
       {
         mutations: [
           {
             patch: {
-              id: product.result._id,
+              id: product._id,
               set: {
                 title: sanityProductEntity.title,
                 attributes: sanityProductEntity.attributes,
@@ -131,13 +138,6 @@ export default async function handler(
           },
         ],
       },
-      sanityHeaders
-    );
-    return res.status(200).json({ data: data.data });
-  } else if (product.result === null && action === "create") {
-    const data = await axios.post(
-      url,
-      { mutations: [{ create: sanityProductEntity }] },
       sanityHeaders
     );
     return res.status(200).json({ data: data.data });
