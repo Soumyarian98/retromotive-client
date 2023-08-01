@@ -1,14 +1,20 @@
+import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import { SlArrowRightCircle } from "react-icons/sl";
 
 const DownloadApp = () => {
   return (
-    <div className="bg-black px-[10vw] py-[2vw] flex gap-4 justify-center items-center text-white">
-      <p className="uppercase">
+    <Stack
+      direction="row"
+      justifyContent="center"
+      alignItems="center"
+      color="#fff"
+      spacing={2}>
+      <Typography>
         Read More Articles Like These Download Our Brand New App
-      </p>
-      <SlArrowRightCircle className="text-3xl" />
-    </div>
+      </Typography>
+      <SlArrowRightCircle size={24} />
+    </Stack>
   );
 };
 

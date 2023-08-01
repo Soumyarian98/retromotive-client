@@ -42,38 +42,40 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider
         theme={createTheme({
           palette: {
-            // mode: "dark",
             primary: {
-              main: "#103fef",
+              light: "#DC0000",
+              main: "#D21312",
+              dark: "#AE0000",
             },
-            // secondary: {
-            //   dark: "#b2102f",
-            //   main: "#ff1744",
-            //   light: "#ff4569",
-            // },
+            secondary: {
+              main: "#000000",
+            },
+          },
+          shape: {
+            borderRadius: 20,
           },
           typography: {
-            fontFamily: font2.style.fontFamily,
+            fontFamily: `'Mulish', sans-serif`,
             subtitle1: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h1: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h2: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h3: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h4: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h5: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             h6: {
-              fontFamily: font1.style.fontFamily,
+              fontFamily: `'Montserrat', sans-serif`,
             },
             button: {
               textTransform: "capitalize",
@@ -119,5 +121,3 @@ export default function App({ Component, pageProps }: AppProps) {
     </ClerkProvider>
   );
 }
-
-// eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM1ZmUxMWU5YTgwM2FiN2VlYjNjY2M5NyIsImp0aSI6IjY4YWM5ZWIyOTFhN2ZkYjRhZjg1ZGM4NTIzMjA5N2YxM2FkYzk4ODViMjgyNTZlNzUyNmU3M2NlNmY1OTNhNmIwZGRjZTlkMTUzZmJjYWMwIiwiaWF0IjoxNjg4MDA4ODgyLjM4MDg1NSwibmJmIjoxNjg4MDA4ODgyLjM4MDg1OSwiZXhwIjoxNzE5NjMxMjgyLjM3NDY2NCwic3ViIjoiOTQ2OTM3NyIsInNjb3BlcyI6WyJzaG9wcy5tYW5hZ2UiLCJzaG9wcy5yZWFkIiwiY2F0YWxvZy5yZWFkIiwib3JkZXJzLnJlYWQiLCJvcmRlcnMud3JpdGUiLCJwcm9kdWN0cy5yZWFkIiwicHJvZHVjdHMud3JpdGUiLCJ3ZWJob29rcy5yZWFkIiwid2ViaG9va3Mud3JpdGUiLCJ1cGxvYWRzLnJlYWQiLCJ1cGxvYWRzLndyaXRlIiwicHJpbnRfcHJvdmlkZXJzLnJlYWQiXX0.AQpPZnEFVkq2poah2KdnKfi7lD0aMEyPBbIEHxJhb4pjqj8XcanQCNFGYc8kwbIJHV1-sg9eLBENv1NeN70

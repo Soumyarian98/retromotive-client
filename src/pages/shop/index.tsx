@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -15,27 +16,21 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import NextLink from "next/link";
-import { FiHeart } from "react-icons/fi";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import MobileFilter from "@/sections/shop/MobileFIlter";
-import ShoppingCategories from "@/sections/shop/ShoppingCategories";
+import { groq } from "next-sanity";
+import { client } from "../../../sanity/lib/client";
+import ProductCard from "@/components/ProductCard";
 
 export const getServerSideProps: GetServerSideProps<any> = async context => {
-  const { page, category } = context.query;
-  const productResponse = await fetch(
-    `http://localhost:9000/api/products?category=${category}&page=${page}`
-  );
-  const productData = await productResponse.json();
-  const categoryResponse = await fetch(
-    `http://localhost:9000/api/product-categories`
-  );
-  const categoryData = await categoryResponse.json();
+  const { page, category, variants } = context.query;
+
+  const groqQuery = groq`*[_type == "product"]{ _id, title, variants[0]{price}}`;
+  const productResponse = await client.fetch(groqQuery);
+
   return {
     props: {
-      productData: productData.data,
-      categoryData: categoryData.data,
+      productData: productResponse,
     },
   };
 };
@@ -43,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<any> = async context => {
 const Shop = (props: any) => {
   const router = useRouter();
   const { page, category } = router.query;
-  const { categoryData, productData } = props;
+  const { productData } = props;
 
   const [activeCategoryId, setActiveCategoryId] = React.useState(
     Number(category)
@@ -68,117 +63,46 @@ const Shop = (props: any) => {
     router.push(`/shop?category=${activeCategoryId}&page=${value}`);
   };
 
-  const activeCategory = React.useMemo(() => {
-    return categoryData.find((c: any) => c.id === activeCategoryId);
-  }, [activeCategoryId, categoryData]);
+  // const activeCategory = React.useMemo(() => {
+  //   return categoryData.find((c: any) => c.id === activeCategoryId);
+  // }, [activeCategoryId, categoryData]);
+
+  const createCheckoutSession = () => {};
 
   return (
     <Container maxWidth="lg">
-      <Stack sx={{ mt: 2 }}>
+      <Stack sx={{ mt: 2 }} spacing={4} alignItems="center">
         <Typography
           variant="h5"
           textAlign="center"
           textTransform="uppercase"
           fontWeight={700}>
-          {activeCategory?.name || "All Products"}
+          All Products
         </Typography>
-        <Grid container sx={{ mt: 4 }}>
-          <Grid item xs={0} md={3}>
-            <Box sx={{ display: { xs: "none", lg: "block" } }}>
-              <ShoppingCategories
-                activeCategoryId={activeCategoryId}
-                handleCategoryChange={handleCategoryChange}
-                categoryData={categoryData}
-              />
-            </Box>
+        <div>
+          <Grid container spacing={{ xs: 0.5, md: 3 }}>
+            {productData.map((p: any) => {
+              return (
+                <Grid item xs={6} sm={6} md={4}>
+                  <ProductCard
+                    brand="Retromotive"
+                    title={p.title}
+                    price={p.variants.price}
+                    image="https://retromotive.co/wp-content/uploads/2023/07/12100-36.jpg"
+                  />
+                </Grid>
+              );
+            })}
           </Grid>
-          <Grid item xs={12} md={9}>
-            <Grid container spacing={3}>
-              {productData.map((p: any) => {
-                return (
-                  <Grid item xs={6} sm={6} md={4}>
-                    <Card key={p.id} elevation={0} sx={{ height: "100%" }}>
-                      <Box sx={{ position: "relative" }}>
-                        <NextLink href={`/shop/products/${p.id}`} passHref>
-                          <CardMedia
-                            sx={{
-                              cursor: "pointer",
-                              textDecoration: "none",
-                              opacity: p.stock_status === "instock" ? 1 : 0.25,
-                              borderRadius: 4,
-                            }}
-                            component="img"
-                            image={p.images[0]?.src}
-                          />
-                        </NextLink>
-                        <IconButton
-                          sx={{ position: "absolute", top: 4, right: 4 }}>
-                          <FiHeart stroke="#fff" fill="#00000020" />
-                        </IconButton>
-                      </Box>
-                      <CardContent sx={{ px: 0 }}>
-                        <Stack>
-                          <Link underline="none">
-                            <Typography
-                              fontSize={{ xs: "14px", lg: "16px" }}
-                              color="textPrimary"
-                              fontWeight={600}
-                              sx={{
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                                display: "block",
-                                cursor: "pointer",
-                              }}>
-                              {p.name}
-                            </Typography>
-                          </Link>
-                          <Typography
-                            fontSize={{ xs: "14px", lg: "16px" }}
-                            color="textSecondary">
-                            Retromotive
-                          </Typography>
-                        </Stack>
-                        <Typography
-                          fontSize={{ xs: "14px", lg: "16px" }}
-                          color="#000"
-                          fontWeight={600}
-                          sx={{ mt: 1 }}>
-                          ${p.price}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Stack alignItems="center">
-          <Pagination
-            color="primary"
-            count={Math.ceil(activeCategory?.count / 12) || 1}
-            page={activePage}
-            onChange={handlePageChange}
-            variant="outlined"
-            sx={{ mt: 4 }}
-          />
-        </Stack>
-        <Box
-          sx={{
-            mt: 4,
-            position: "sticky",
-            bottom: 0,
-            display: { xs: "block", md: "none" },
-          }}>
-          <MobileFilter>
-            <ShoppingCategories
-              activeCategoryId={activeCategoryId}
-              handleCategoryChange={handleCategoryChange}
-              categoryData={categoryData}
-            />
-          </MobileFilter>
-        </Box>
+        </div>
+        <Pagination
+          color="primary"
+          count={1}
+          page={activePage}
+          onChange={handlePageChange}
+          variant="outlined"
+        />
+        <Button>Checkout</Button>
       </Stack>
     </Container>
   );

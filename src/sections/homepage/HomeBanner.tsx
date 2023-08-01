@@ -1,4 +1,12 @@
-import { Box, Container } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { nanoid } from "nanoid";
 import React from "react";
 import Carousel from "react-multi-carousel";
@@ -6,8 +14,10 @@ import Carousel from "react-multi-carousel";
 const data = [
   {
     id: nanoid(),
-    imageUrl:
-      "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order1-1.jpg",
+    imageUrl: {
+      xs: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order-mobile1.jpg",
+      md: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V18-Pre-Order1-1.jpg",
+    },
     title: "Say Hello To V8",
     subtitle: "Pre-Order Now",
     buttonTitle: "Subscribe Now",
@@ -15,16 +25,22 @@ const data = [
 
   {
     id: nanoid(),
-    imageUrl:
-      "https://retromotive.co/wp-content/uploads/2022/04/herobanner-App2.jpg",
+    imageUrl: {
+      xs: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V19-Pre-Order-mobile1.jpg",
+      md: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-App2.jpg",
+    },
+
     title: "Say Hello To V8",
     subtitle: "Pre-Order Now",
     buttonTitle: "Subscribe Now",
   },
   {
     id: nanoid(),
-    imageUrl:
-      "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V171.jpg",
+    imageUrl: {
+      xs: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V19-Pre-Order-mobile1.jpg",
+      md: "https://retromotive.co/wp-content/uploads/2022/04/herobanner-V171.jpg",
+    },
+
     title: "Say Hello To V8",
     subtitle: "Pre-Order Now",
     buttonTitle: "Subscribe Now",
@@ -52,21 +68,23 @@ const responsive = {
 };
 
 const HomeBanner = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("sm"));
   return (
-    <Container>
+    <Box sx={{ width: "100%" }}>
       <Carousel responsive={responsive} infinite>
         {data.map(item => (
           <div key={item.id}>
             <Box
               component="img"
-              src={item.imageUrl}
+              src={matches ? item.imageUrl.xs : item.imageUrl.md}
               alt={item.title}
               sx={{ width: "100%" }}
             />
           </div>
         ))}
       </Carousel>
-    </Container>
+    </Box>
   );
 };
 
