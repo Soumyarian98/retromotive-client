@@ -1,7 +1,14 @@
 import { defineField, defineType } from "sanity";
 import { countries } from "countries-list";
-import CurrencyList from "currency-list";
+
 import currencyCodes from "currency-codes";
+
+const socialMediaPlatforms = [
+  { title: "Facebook", value: "facebook" },
+  { title: "Instagram", value: "instgram" },
+  { title: "Twitter", value: "twitter" },
+  { title: "Youtube", value: "Youtube" },
+];
 
 export default defineType({
   name: "magazine",
@@ -48,7 +55,6 @@ export default defineType({
         },
       ],
     }),
-
     defineField({
       title: "Release date",
       name: "releaseDate",
@@ -73,6 +79,27 @@ export default defineType({
         {
           type: "reference",
           to: [{ type: "category" }],
+        },
+      ],
+    }),
+    defineField({
+      title: "Social Media Links",
+      name: "socialMediaLinks",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              title: "Platform",
+              name: "platform",
+              type: "string",
+              options: {
+                list: socialMediaPlatforms,
+              },
+            },
+            { type: "url", name: "url" },
+          ],
         },
       ],
     }),
