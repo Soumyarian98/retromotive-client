@@ -7,7 +7,8 @@ const socialMediaPlatforms = [
   { title: "Facebook", value: "facebook" },
   { title: "Instagram", value: "instgram" },
   { title: "Twitter", value: "twitter" },
-  { title: "Youtube", value: "Youtube" },
+  { title: "Youtube", value: "youtube" },
+  { title: "Pintrest", value: "pintrest" },
 ];
 
 export default defineType({
