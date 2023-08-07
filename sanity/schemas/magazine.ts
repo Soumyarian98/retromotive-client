@@ -55,6 +55,11 @@ export default defineType({
       type: "date",
     }),
     defineField({
+      title: "Featured Image",
+      name: "featuredImage",
+      type: "image",
+    }),
+    defineField({
       title: "Images",
       name: "images",
       type: "array",
@@ -98,10 +103,12 @@ export default defineType({
                 {
                   type: "string",
                   options: {
-                    list: Object.entries(countries).map(([k, v]) => ({
-                      title: v.name,
-                      value: k,
-                    })),
+                    list: Object.entries(countries)
+                      .map(([k, v]) => ({
+                        title: v.name,
+                        value: k,
+                      }))
+                      .push({ title: "All Countries", value: "all-countries" }),
                   },
                 },
               ],
