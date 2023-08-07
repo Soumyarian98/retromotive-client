@@ -1,18 +1,18 @@
+import { Stack } from "@mui/material";
 import Apparel from "@/sections/homepage/Apparel";
 import Articles from "@/sections/homepage/Articles";
-import GridBanners from "@/sections/homepage/GridBanners";
-import HomeBanner from "@/sections/homepage/HomeBanner";
 import MagazineGrid from "@/sections/homepage/MagazineGrid";
-import { Stack } from "@mui/material";
+import HomeBanner from "@/sections/homepage/home-banner";
+import DataCarousel from "@/sections/homepage/data-carousel";
 
 export default function Home() {
   return (
-    <Stack alignItems="center" spacing={{ xs: 6, md: 12 }}>
+    <Stack alignItems="center" spacing={{ xs: 3, md: 12 }}>
       <HomeBanner />
-      <GridBanners />
+      <DataCarousel />
       <MagazineGrid />
-      <Apparel />
       <Articles />
+      <Apparel />
     </Stack>
   );
 }

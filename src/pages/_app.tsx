@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Montserrat, Mulish } from "next/font/google";
+import { Roboto_Slab, Mulish } from "next/font/google";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import "react-multi-carousel/lib/styles.css";
 import GlobalLayout from "@/layout/GlobalLayout";
@@ -12,8 +12,9 @@ import {
   closePageLoader,
   showPageLoader,
 } from "@/components/PageLoader";
+import { useEffect } from "react";
 
-const font1 = Montserrat({
+const font1 = Roboto_Slab({
   weight: ["400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
 });
@@ -41,42 +42,11 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <ThemeProvider
         theme={createTheme({
-          palette: {
-            primary: {
-              light: "#DC0000",
-              main: "#D21312",
-              dark: "#AE0000",
-            },
-            secondary: {
-              main: "#000000",
-            },
-          },
           shape: {
-            borderRadius: 20,
+            borderRadius: 0,
           },
           typography: {
             fontFamily: `'Mulish', sans-serif`,
-            subtitle1: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h1: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h2: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h3: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h4: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h5: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
-            h6: {
-              fontFamily: `'Montserrat', sans-serif`,
-            },
             button: {
               textTransform: "capitalize",
             },

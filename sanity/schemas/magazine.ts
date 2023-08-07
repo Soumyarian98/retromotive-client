@@ -1,4 +1,7 @@
 import { defineField, defineType } from "sanity";
+import { countries } from "countries-list";
+import CurrencyList from "currency-list";
+import currencyCodes from "currency-codes";
 
 export default defineType({
   name: "magazine",
@@ -22,9 +25,34 @@ export default defineType({
       type: "blockContent",
     }),
     defineField({
+      type: "array",
       name: "price",
       title: "Price",
-      type: "number",
+      of: [
+        {
+          type: "object",
+          fields: [
+            { type: "number", name: "value", title: "Value" },
+            {
+              title: "Currency",
+              name: "currency",
+              type: "string",
+              options: {
+                list: currencyCodes.data.map(d => ({
+                  title: d.currency,
+                  value: d.code,
+                })),
+              },
+            },
+          ],
+        },
+      ],
+    }),
+
+    defineField({
+      title: "Release date",
+      name: "releaseDate",
+      type: "date",
     }),
     defineField({
       title: "Images",
@@ -53,9 +81,30 @@ export default defineType({
             { type: "number", name: "firstItemCost" },
             { type: "number", name: "additionalItemsCost" },
             {
+              title: "Currency",
+              name: "currency",
+              type: "string",
+              options: {
+                list: currencyCodes.data.map(d => ({
+                  title: d.currency,
+                  value: d.code,
+                })),
+              },
+            },
+            {
               type: "array",
               name: "countries",
-              of: [{ type: "string" }],
+              of: [
+                {
+                  type: "string",
+                  options: {
+                    list: Object.entries(countries).map(([k, v]) => ({
+                      title: v.name,
+                      value: k,
+                    })),
+                  },
+                },
+              ],
             },
             {
               type: "array",

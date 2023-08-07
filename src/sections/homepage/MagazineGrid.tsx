@@ -59,8 +59,7 @@ const MagazineGrid = () => {
       <Stack justifyContent="center" alignItems="center" spacing={4}>
         <Typography
           variant="h5"
-          textAlign="center"
-          textTransform="uppercase"
+          textAlign={{ xs: "left", md: "center" }}
           fontWeight={700}>
           Quaterlies
         </Typography>

@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { SlArrowRightCircle } from "react-icons/sl";
 import DataCarousel from "./DataCarousel";
-import MagazineGrid from "./MagazineGrid";
 
 const imageUrls = [
   "/image1.jpg",

@@ -65,9 +65,49 @@ const Navbar = () => {
 
   return (
     <div>
-      <AppBar
+      <div className="w-full fixed h-[96px] md:[128px] z-10">
+        <Container className="h-full">
+          <div className="flex items-center justify-between h-full">
+            <div>
+              <Logo />
+            </div>
+            <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
+              {listItems}
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={{ xs: 1, md: 2 }}>
+              {isSignedIn ? (
+                <UserButton />
+              ) : (
+                <SignInButton mode="modal">
+                  <Button sx={{ textTransform: "uppercase" }}>Login</Button>
+                </SignInButton>
+              )}
+              <CartButton />
+              <IconButton
+                color="secondary"
+                sx={{ display: { xs: "inline-flex", lg: "none" } }}
+                onClick={() => setOpen(true)}>
+                <FiMenu />
+              </IconButton>
+            </Stack>
+            {/* <div className="w-[20px] md:w-[25px]">
+              {new Array(2).fill(0).map((_, index) => (
+                <div
+                  className="mb-2 bg-black h-[2px] w-full block"
+                  key={index}
+                />
+              ))}
+            </div> */}
+          </div>
+        </Container>
+      </div>
+      {/* <AppBar
         color="inherit"
-        sx={{ bgcolor: "#ffffff", backdropFilter: "blur(5px)" }}>
+        sx={{ bgcolor: "#ffffff", backdropFilter: "blur(5px)" }}
+        position="fixed">
         <Container maxWidth="lg">
           <Toolbar
             disableGutters
@@ -97,7 +137,7 @@ const Navbar = () => {
             </Stack>
           </Toolbar>
         </Container>
-      </AppBar>
+      </AppBar> */}
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <Stack
           sx={{ minWidth: "240px", p: 2 }}
