@@ -106,11 +106,6 @@ export default defineType({
                 },
               ],
             },
-            {
-              type: "array",
-              name: "allowedVariantIds",
-              of: [{ type: "number" }],
-            },
           ],
         },
       ],
