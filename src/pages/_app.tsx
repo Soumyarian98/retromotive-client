@@ -13,6 +13,7 @@ import {
   showPageLoader,
 } from "@/components/PageLoader";
 import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 const font1 = Roboto_Slab({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -87,6 +88,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </GlobalLayout>
           <PageLoadingSpinner />
         </QueryClientProvider>
+        <Toaster />
       </ThemeProvider>
     </ClerkProvider>
   );

@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import {
   Box,
   Button,
@@ -8,9 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { GetStaticProps } from "next";
-import React from "react";
 import Carousel from "react-multi-carousel";
-import { client } from "../../../sanity/lib/client";
 import imageUrlBuilder from "@sanity/image-url";
 import PortableText from "react-portable-text";
 import {
@@ -22,7 +21,11 @@ import {
 } from "react-icons/fi";
 import Link from "next/link";
 import { FaPinterest } from "react-icons/fa";
+import { toast } from "react-hot-toast";
+
+import { client } from "../../../sanity/lib/client";
 import { ShareButton } from "@/components/ShareButton";
+import { useCartStore } from "@/hooks/useCartStore";
 
 const builder = imageUrlBuilder(client);
 
@@ -42,10 +45,9 @@ const responsive = {
 };
 
 const MagazineDetails = (props: any) => {
+  const { addItem, cartData, toggle } = useCartStore();
   const { data } = props;
   const magazine = data[0];
-
-  console.log(magazine, "helo");
 
   if (!magazine) {
     return <div>Not found</div>;
@@ -60,6 +62,21 @@ const MagazineDetails = (props: any) => {
   };
 
   const shareText = `Hey! Check out this awesome magazine on Retromotive. Hope you will like them :)\n\n1. ${magazine.title}:\n https://retromotive.co//magazines/${magazine.contentHandle.current}\n\n`;
+
+  const isItemExistInCart = useMemo(() => {
+    const item = cartData.find((i: any) => i.item._id === magazine._id);
+    return Boolean(item);
+  }, [cartData, magazine._id]);
+
+  const handleAddToCart = () => {
+    if (isItemExistInCart) {
+      toggle();
+    } else {
+      addItem(magazine);
+      toast.success("Added to cart");
+      toggle();
+    }
+  };
 
   return (
     <Container>
@@ -128,9 +145,10 @@ const MagazineDetails = (props: any) => {
                 fullWidth
                 size="large"
                 variant="contained"
-                onClick={() => {}}
-                disabled={false}>
-                Add to Cart
+                onClick={handleAddToCart}
+                disabled={false}
+                color={isItemExistInCart ? "secondary" : "primary"}>
+                {isItemExistInCart ? "Proceed To Checkout" : "Add to Cart"}
               </Button>
               <Stack
                 direction="row"
