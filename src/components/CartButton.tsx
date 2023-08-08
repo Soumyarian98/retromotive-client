@@ -95,22 +95,18 @@ const CartButton = () => {
                 <CardHeader
                   disableTypography
                   title={
-                    <Typography
-                      fontSize={{ xs: "12px", md: "18px" }}
-                      fontWeight={700}>
+                    <Typography fontSize="18px" fontWeight={700}>
                       {c.item.title}
                     </Typography>
                   }
                   subheader={
-                    <Typography
-                      fontSize={{ xs: "10px", md: "14px" }}
-                      color="text.secondary">
+                    <Typography fontSize="14px" color="text.secondary">
                       Retromotive
                     </Typography>
                   }
                   action={
                     <Typography
-                      fontSize={{ xs: "12px", md: "18px" }}
+                      fontSize="18px"
                       sx={{ mt: 0.5 }}
                       fontWeight={600}>
                       ${c.item.price?.[0].value}
