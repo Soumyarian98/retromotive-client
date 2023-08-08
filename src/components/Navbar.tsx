@@ -61,7 +61,7 @@ const Navbar = () => {
   return (
     <div>
       <ElevationScroll>
-        <AppBar className="w-full fixed h-[96px] md:[128px]  bg-[#FCFCFC] z-[100] text-gray-950">
+        <AppBar className="w-full fixed h-[96px] md:[128px] z-[100] bg-[#FCFCFC] text-gray-950">
           <Container className="h-full">
             <div className="flex items-center justify-between h-full">
               <Logo />

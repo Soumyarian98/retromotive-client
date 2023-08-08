@@ -16,7 +16,7 @@ const GlobalLayout = ({ children }: Props) => {
   return (
     <Box component="main" sx={{ bgcolor: "#FCFCFC" }}>
       <Navbar />
-      <Box component="section" sx={{ minHeight: "100vh" }}>
+      <Box component="section" sx={{ minHeight: "100vh", pt: "120px", pb: 4 }}>
         {children}
       </Box>
       <Footer />

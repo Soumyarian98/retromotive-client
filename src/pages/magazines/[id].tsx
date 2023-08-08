@@ -1,21 +1,14 @@
-import { magazines } from "@/data/magazines";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Container,
   Grid,
   IconButton,
-  Rating,
   Stack,
   Typography,
 } from "@mui/material";
 import { GetStaticProps } from "next";
-import { useRouter } from "next/router";
 import React from "react";
-import { SlArrowDown } from "react-icons/sl";
 import Carousel from "react-multi-carousel";
 import { client } from "../../../sanity/lib/client";
 import imageUrlBuilder from "@sanity/image-url";
@@ -43,16 +36,12 @@ const MagazineDetails = (props: any) => {
   const { data } = props;
   const magazine = data[0];
 
-  console.log(magazine, "hello");
-
   if (!magazine) {
     return <div>Not found</div>;
   }
 
-  console.log(urlFor(magazine.featuredImage), "hello2");
-
   return (
-    <Container sx={{ pt: "128px" }}>
+    <Container>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Grid
