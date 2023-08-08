@@ -13,7 +13,16 @@ import Carousel from "react-multi-carousel";
 import { client } from "../../../sanity/lib/client";
 import imageUrlBuilder from "@sanity/image-url";
 import PortableText from "react-portable-text";
-import { FiHeart } from "react-icons/fi";
+import {
+  FiFacebook,
+  FiHeart,
+  FiInstagram,
+  FiTwitter,
+  FiYoutube,
+} from "react-icons/fi";
+import Link from "next/link";
+import { FaPinterest } from "react-icons/fa";
+import { ShareButton } from "@/components/ShareButton";
 
 const builder = imageUrlBuilder(client);
 
@@ -36,9 +45,21 @@ const MagazineDetails = (props: any) => {
   const { data } = props;
   const magazine = data[0];
 
+  console.log(magazine, "helo");
+
   if (!magazine) {
     return <div>Not found</div>;
   }
+
+  const socialMedias = {
+    facebook: <FiFacebook className="text-indigo-600 fill-indigo-50" />,
+    twitter: <FiTwitter className="text-blue-500 fill-blue-50" />,
+    youtube: <FiYoutube className="text-red-600 fill-red-50" />,
+    instgram: <FiInstagram className="text-pink-600 fill-pink-50" />,
+    pintrest: <FaPinterest className="text-red-600 fill-red-50" />,
+  };
+
+  const shareText = `Hey! Check out this awesome magazine on Retromotive. Hope you will like them :)\n\n1. ${magazine.title}:\n https://retromotive.co//magazines/${magazine.contentHandle.current}\n\n`;
 
   return (
     <Container>
@@ -48,31 +69,35 @@ const MagazineDetails = (props: any) => {
             container
             spacing={1}
             sx={{ display: { xs: "none", lg: "flex" } }}>
-            {magazine?.images.map((i: any) => (
-              <Grid item xs={12} md={6} key={i}>
-                <Box
-                  component="img"
-                  src={urlFor(i).width(800).height(800).dpr(1).url()}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-            ))}
+            <Grid item xs={12}>
+              <Box
+                component="img"
+                src={urlFor(magazine.featuredImage)
+                  .width(800)
+                  .height(800)
+                  .dpr(1)
+                  .url()}
+                sx={{ width: "100%" }}
+              />
+            </Grid>
           </Grid>
-          <Carousel
-            containerClass="carousel-container"
-            ssr
-            infinite
-            responsive={responsive}>
-            {magazine?.images.map((i: any) => (
-              <Grid item xs={12} md={6} key={i}>
-                <Box
-                  component="img"
-                  src={urlFor(i).width(500).height(800).dpr(1).url()}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-            ))}
-          </Carousel>
+          <Box sx={{ display: { xs: "block", md: "none" } }}>
+            <Carousel
+              containerClass="carousel-container"
+              ssr
+              infinite
+              responsive={responsive}>
+              {magazine?.images.map((i: any) => (
+                <Grid item xs={12} md={6} key={i}>
+                  <Box
+                    component="img"
+                    src={urlFor(i).width(800).height(800).dpr(1).url()}
+                    sx={{ width: "100%" }}
+                  />
+                </Grid>
+              ))}
+            </Carousel>
+          </Box>
         </Grid>
         <Grid item xs={12} md={4}>
           <Stack gap={4}>
@@ -107,12 +132,40 @@ const MagazineDetails = (props: any) => {
                 disabled={false}>
                 Add to Cart
               </Button>
+              <Stack
+                direction="row"
+                spacing={1}
+                mt={2}
+                alignItems="center"
+                justifyContent="space-between">
+                <Stack direction="row" spacing={1} ml={-1} alignItems="center">
+                  {magazine?.socialMediaLinks.map((t: any) => (
+                    <Link href={t.url} target="_blank">
+                      {/* @ts-ignore */}
+                      <IconButton>{socialMedias[t.platform]}</IconButton>
+                    </Link>
+                  ))}
+                </Stack>
+                <ShareButton shareText={shareText} />
+              </Stack>
             </div>
+
             <div>
               <PortableText content={magazine.description} />
             </div>
           </Stack>
         </Grid>
+      </Grid>
+      <Grid container spacing={1} sx={{ mt: 3 }}>
+        {magazine?.images.map((i: any) => (
+          <Grid item xs={12} md={4} key={i}>
+            <Box
+              component="img"
+              src={urlFor(i).width(800).height(800).dpr(1).url()}
+              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </Grid>
+        ))}
       </Grid>
     </Container>
   );
