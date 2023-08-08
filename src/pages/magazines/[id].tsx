@@ -7,14 +7,26 @@ import {
   Button,
   Container,
   Grid,
+  IconButton,
   Rating,
   Stack,
   Typography,
 } from "@mui/material";
+import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { SlArrowDown } from "react-icons/sl";
 import Carousel from "react-multi-carousel";
+import { client } from "../../../sanity/lib/client";
+import imageUrlBuilder from "@sanity/image-url";
+import PortableText from "react-portable-text";
+import { FiHeart } from "react-icons/fi";
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source: any) {
+  return builder.image(source);
+}
 
 const responsive = {
   tablet: {
@@ -27,24 +39,33 @@ const responsive = {
   },
 };
 
-const MagazineDetails = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const magazine = magazines.find(m => m.slug === id);
+const MagazineDetails = (props: any) => {
+  const { data } = props;
+  const magazine = data[0];
 
-  if (!magazine) return <div>Magazine not found</div>;
+  console.log(magazine, "hello");
+
+  if (!magazine) {
+    return <div>Not found</div>;
+  }
+
+  console.log(urlFor(magazine.featuredImage), "hello2");
 
   return (
-    <Container>
-      <Grid container spacing={3} sx={{ mt: { xs: 0, lg: 2 } }}>
+    <Container sx={{ pt: "128px" }}>
+      <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Grid
             container
             spacing={1}
             sx={{ display: { xs: "none", lg: "flex" } }}>
-            {magazine?.images.map(i => (
+            {magazine?.images.map((i: any) => (
               <Grid item xs={12} md={6} key={i}>
-                <Box component="img" src={i} sx={{ width: "100%" }} />
+                <Box
+                  component="img"
+                  src={urlFor(i).width(800).height(800).dpr(1).url()}
+                  sx={{ width: "100%" }}
+                />
               </Grid>
             ))}
           </Grid>
@@ -53,8 +74,14 @@ const MagazineDetails = () => {
             ssr
             infinite
             responsive={responsive}>
-            {magazine?.images.map(i => (
-              <Box key={i} component="img" src={i} sx={{ width: "100%" }} />
+            {magazine?.images.map((i: any) => (
+              <Grid item xs={12} md={6} key={i}>
+                <Box
+                  component="img"
+                  src={urlFor(i).width(500).height(800).dpr(1).url()}
+                  sx={{ width: "100%" }}
+                />
+              </Grid>
             ))}
           </Carousel>
         </Grid>
@@ -62,50 +89,38 @@ const MagazineDetails = () => {
           <Stack gap={4}>
             <div>
               <Typography variant="h5" fontWeight={700}>
-                {magazine?.title}
+                {magazine.title}
               </Typography>
-              <Typography color="text.secondary">{magazine?.brand}</Typography>
+              <Typography color="text.secondary">Retromotive</Typography>
             </div>
             <div>
-              <Typography variant="body1">{magazine?.description}</Typography>
-            </div>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center">
-              <div>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <Typography variant="h6">${magazine?.offerPrice}</Typography>
-                  <Typography
-                    variant="h6"
-                    color="textSecondary"
-                    sx={{ textDecoration: "line-through" }}>
-                    ${magazine?.price}
-                  </Typography>
-                </Stack>
-                <Rating
-                  precision={0.5}
-                  name="size-small"
-                  value={4.5}
-                  size="small"
-                  readOnly
-                />
-              </div>
-              <Button variant="contained" onClick={() => {}} disabled={false}>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center">
+                <div>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="h6">
+                      ${magazine.price[0].value}
+                    </Typography>
+                  </Stack>
+                </div>
+                <IconButton>
+                  <FiHeart />
+                </IconButton>
+              </Stack>
+              <Button
+                sx={{ mt: 1 }}
+                fullWidth
+                size="large"
+                variant="contained"
+                onClick={() => {}}
+                disabled={false}>
                 Add to Cart
               </Button>
-            </Stack>
+            </div>
             <div>
-              {magazine?.stories.map((s, index) => (
-                <Accordion key={s.id} defaultExpanded={index === 0}>
-                  <AccordionSummary expandIcon={<SlArrowDown />}>
-                    <Typography>{s.title}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant="body2">{s.description}</Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
+              <PortableText content={magazine.description} />
             </div>
           </Stack>
         </Grid>
@@ -113,5 +128,19 @@ const MagazineDetails = () => {
     </Container>
   );
 };
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const query = `*[_type == "magazine" && contentHandle.current == "${params?.id}"]`;
+  const data = await client.fetch(query);
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+export async function getStaticPaths() {
+  return { paths: [], fallback: "blocking" };
+}
 
 export default MagazineDetails;

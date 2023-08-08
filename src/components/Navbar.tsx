@@ -10,23 +10,18 @@ import {
   ListItemButton,
   ListItemText,
   Stack,
-  Toolbar,
 } from "@mui/material";
 import React from "react";
 import Logo from "./Logo";
-import { FiLogIn, FiMenu, FiUser, FiX } from "react-icons/fi";
+import { FiMenu, FiX } from "react-icons/fi";
 import { grey } from "@mui/material/colors";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import CartButton from "./CartButton";
 import { UserButton, SignInButton, useUser } from "@clerk/clerk-react";
+import ElevationScroll from "./ElevateOnScroll";
 
 const menus = [
-  {
-    id: nanoid(),
-    title: "Shop",
-    redirectLink: "/shop",
-  },
   {
     id: nanoid(),
     title: "Subscribe",
@@ -34,8 +29,8 @@ const menus = [
   },
   {
     id: nanoid(),
-    title: "Article",
-    redirectLink: "/articles",
+    title: "Magazines",
+    redirectLink: "/magazines",
   },
   {
     id: nanoid(),
@@ -65,79 +60,38 @@ const Navbar = () => {
 
   return (
     <div>
-      <div className="w-full fixed h-[96px] md:[128px] z-10">
-        <Container className="h-full">
-          <div className="flex items-center justify-between h-full">
-            <div>
+      <ElevationScroll>
+        <AppBar className="w-full fixed h-[96px] md:[128px]  bg-[#FCFCFC] z-[100] text-gray-950">
+          <Container className="h-full">
+            <div className="flex items-center justify-between h-full">
               <Logo />
+              <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
+                {listItems}
+              </Stack>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={{ xs: 1, md: 2 }}>
+                {isSignedIn ? (
+                  <UserButton />
+                ) : (
+                  <SignInButton mode="modal">
+                    <Button sx={{ textTransform: "uppercase" }}>Login</Button>
+                  </SignInButton>
+                )}
+                <CartButton />
+                <IconButton
+                  color="secondary"
+                  sx={{ display: { xs: "inline-flex", lg: "none" } }}
+                  onClick={() => setOpen(true)}>
+                  <FiMenu />
+                </IconButton>
+              </Stack>
             </div>
-            <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
-              {listItems}
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1, md: 2 }}>
-              {isSignedIn ? (
-                <UserButton />
-              ) : (
-                <SignInButton mode="modal">
-                  <Button sx={{ textTransform: "uppercase" }}>Login</Button>
-                </SignInButton>
-              )}
-              <CartButton />
-              <IconButton
-                color="secondary"
-                sx={{ display: { xs: "inline-flex", lg: "none" } }}
-                onClick={() => setOpen(true)}>
-                <FiMenu />
-              </IconButton>
-            </Stack>
-            {/* <div className="w-[20px] md:w-[25px]">
-              {new Array(2).fill(0).map((_, index) => (
-                <div
-                  className="mb-2 bg-black h-[2px] w-full block"
-                  key={index}
-                />
-              ))}
-            </div> */}
-          </div>
-        </Container>
-      </div>
-      {/* <AppBar
-        color="inherit"
-        sx={{ bgcolor: "#ffffff", backdropFilter: "blur(5px)" }}
-        position="fixed">
-        <Container maxWidth="lg">
-          <Toolbar
-            disableGutters
-            sx={{ justifyContent: "space-between", py: 1.5 }}>
-            <Logo />
-            <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
-              {listItems}
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={{ xs: 1, md: 2 }}>
-              {isSignedIn ? (
-                <UserButton />
-              ) : (
-                <SignInButton mode="modal">
-                  <Button sx={{ textTransform: "uppercase" }}>Login</Button>
-                </SignInButton>
-              )}
-              <CartButton />
-              <IconButton
-                color="secondary"
-                sx={{ display: { xs: "inline-flex", lg: "none" } }}
-                onClick={() => setOpen(true)}>
-                <FiMenu />
-              </IconButton>
-            </Stack>
-          </Toolbar>
-        </Container>
-      </AppBar> */}
+          </Container>
+        </AppBar>
+      </ElevationScroll>
+
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <Stack
           sx={{ minWidth: "240px", p: 2 }}

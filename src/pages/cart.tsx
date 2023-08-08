@@ -1,18 +1,5 @@
-import {
-  Avatar,
-  Container,
-  Grid,
-  Stack,
-  Tab,
-  Tabs,
-  Theme,
-  Typography,
-  styled,
-  useTheme,
-  Card,
-} from "@mui/material";
-import React, { ReactNode } from "react";
-import { FiCheckSquare } from "react-icons/fi";
+import React from "react";
+import { Container, Typography } from "@mui/material";
 
 // tabs
 
