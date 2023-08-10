@@ -78,6 +78,8 @@ const MagazineDetails = (props: any) => {
     }
   };
 
+  console.log(cartData, "cartData");
+
   return (
     <Container>
       <Grid container spacing={3}>

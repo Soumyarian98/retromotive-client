@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Badge,
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
@@ -22,8 +21,11 @@ import {
   FiTrash,
   FiX,
 } from "react-icons/fi";
+
 import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 import { useCartStore } from "@/hooks/useCartStore";
+import getStripe from "@/utils/get-stripe";
+import axios from "axios";
 
 const CartButton = () => {
   const { show, toggle, cartData, removeItem, setCartData, updateQuantity } =
@@ -41,6 +43,17 @@ const CartButton = () => {
   ) => {
     if (quantity === 0 && payload === -1) return removeItem(id);
     updateQuantity(id, quantity + payload);
+  };
+
+  const handleCheckout = async () => {
+    const stripe = await getStripe();
+    const cheeckoutSession = await axios.post("/api/checkout_session", {
+      items: cartData,
+    });
+    const result = await stripe?.redirectToCheckout({
+      sessionId: cheeckoutSession.data.id,
+    });
+    if (result?.error) alert(result.error.message);
   };
 
   return (
@@ -153,7 +166,10 @@ const CartButton = () => {
               }}>
               <Divider />
               <Stack sx={{ p: 2 }}>
-                <Button variant="contained" size="large">
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleCheckout}>
                   Checkout
                 </Button>
               </Stack>
