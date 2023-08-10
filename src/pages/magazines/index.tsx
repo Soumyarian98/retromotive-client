@@ -85,9 +85,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     title,
     featuredImage,
     price,
-    contentHandle
+    contentHandle,
+    releaseDate
   }`;
   const data = await client.fetch(query);
+  //sort by release date
+  data.sort((a: any, b: any) => {
+    // @ts-ignore
+    return new Date(b.releaseDate) - new Date(a.releaseDate);
+  });
   return {
     props: {
       magazines: data,
