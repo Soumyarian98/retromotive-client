@@ -26,10 +26,25 @@ import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 import { useCartStore } from "@/hooks/useCartStore";
 import getStripe from "@/utils/get-stripe";
 import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import { LoadingButton } from "@mui/lab";
 
 const CartButton = () => {
   const { show, toggle, cartData, removeItem, setCartData, updateQuantity } =
     useCartStore();
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const stripe = await getStripe();
+      const cheeckoutSession = await axios.post("/api/checkout_session", {
+        items: cartData,
+      });
+      const result = await stripe?.redirectToCheckout({
+        sessionId: cheeckoutSession.data.id,
+      });
+      if (result?.error) alert(result.error.message);
+    },
+  });
 
   useEffect(() => {
     const cartData = localStorage.getItem("cartData");
@@ -46,14 +61,7 @@ const CartButton = () => {
   };
 
   const handleCheckout = async () => {
-    const stripe = await getStripe();
-    const cheeckoutSession = await axios.post("/api/checkout_session", {
-      items: cartData,
-    });
-    const result = await stripe?.redirectToCheckout({
-      sessionId: cheeckoutSession.data.id,
-    });
-    if (result?.error) alert(result.error.message);
+    mutation.mutate();
   };
 
   return (
@@ -166,12 +174,13 @@ const CartButton = () => {
               }}>
               <Divider />
               <Stack sx={{ p: 2 }}>
-                <Button
+                <LoadingButton
+                  loading={mutation.isLoading}
                   variant="contained"
                   size="large"
                   onClick={handleCheckout}>
                   Checkout
-                </Button>
+                </LoadingButton>
               </Stack>
             </Box>
           ) : null}
