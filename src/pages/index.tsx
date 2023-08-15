@@ -13,8 +13,6 @@ export default function Home() {
       <DataCarousel />
       <MagazineGrid />
       <MagazineSubscription />
-      {/* <Articles />
-      <Apparel /> */}
     </Stack>
   );
 }

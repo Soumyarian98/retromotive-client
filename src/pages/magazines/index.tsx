@@ -22,7 +22,7 @@ const Magazines: FC<Props> = ({ magazines }) => {
   const router = useRouter();
 
   return (
-    <Container>
+    <Container sx={{ pt: "120px" }}>
       <Typography variant="h5" sx={{ mb: 3 }} fontWeight={700}>
         Magazines
       </Typography>

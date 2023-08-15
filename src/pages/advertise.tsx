@@ -16,7 +16,7 @@ import { SlPaperPlane } from "react-icons/sl";
 
 const Advertise = () => {
   return (
-    <main>
+    <Box sx={{ pt: "120px" }}>
       <Box
         component="img"
         src="https://retromotive.co/wp-content/uploads/2023/03/Advert_HEROBANNER2.jpg"
@@ -122,7 +122,7 @@ const Advertise = () => {
           </Card>
         </Stack>
       </Container>
-    </main>
+    </Box>
   );
 };
 

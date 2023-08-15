@@ -78,10 +78,8 @@ const MagazineDetails = (props: any) => {
     }
   };
 
-  console.log(cartData, "cartData");
-
   return (
-    <Container>
+    <Container sx={{ pt: "120px" }}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <Grid

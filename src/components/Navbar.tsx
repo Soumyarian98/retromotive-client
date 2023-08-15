@@ -59,7 +59,7 @@ const Navbar = () => {
   );
 
   return (
-    <div>
+    <Box>
       <ElevationScroll>
         <AppBar className="w-full fixed h-[96px] md:[128px] z-[100] bg-[#FCFCFC] text-gray-950">
           <Container className="h-full">
@@ -126,7 +126,7 @@ const Navbar = () => {
           </List>
         </Box>
       </Drawer>
-    </div>
+    </Box>
   );
 };
 
