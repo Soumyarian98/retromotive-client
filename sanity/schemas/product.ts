@@ -33,6 +33,11 @@ export default defineType({
       of: [{ type: "block" }],
     }),
     defineField({
+      title: "Featured Image",
+      name: "featuredImage",
+      type: "image",
+    }),
+    defineField({
       title: "Images",
       name: "images",
       type: "array",
