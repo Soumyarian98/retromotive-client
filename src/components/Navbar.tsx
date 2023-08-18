@@ -34,6 +34,16 @@ const menus = [
   },
   {
     id: nanoid(),
+    title: "Articles",
+    redirectLink: "/articles",
+  },
+  {
+    id: nanoid(),
+    title: "Shop",
+    redirectLink: "/shop",
+  },
+  {
+    id: nanoid(),
     title: "Advertise",
     redirectLink: "/advertise",
   },

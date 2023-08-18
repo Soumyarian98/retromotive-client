@@ -1,23 +1,36 @@
-import { articles } from "@/data/articles";
+import React from "react";
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
-import { useRouter } from "next/router";
-import React, { useMemo } from "react";
 import Carousel from "react-multi-carousel";
+import { GetStaticProps } from "next";
+import { client } from "../../../sanity/lib/client";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
-const ArticleDetails = () => {
-  const router = useRouter();
-  const { id } = router.query;
+export const getStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
 
-  const article = useMemo(() => {
-    return articles.find(a => a.contentHandle === id);
-  }, [id]);
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const query = `*[_type == "article" && contentHandle.current == "${params?.id}"][0]`;
+  const res = await client.fetch(query);
+  return {
+    props: {
+      article: res,
+    },
+  };
+};
 
+const ArticleDetails = ({ article }: any) => {
   if (!article) return <div>Article not found</div>;
 
   const getBodyContent = () => {
     const { bodyContent } = article;
-    return bodyContent.map(b => {
-      switch (b.type) {
+    console.log(bodyContent, "article");
+
+    return bodyContent.map((b: any) => {
+      switch (b._type) {
         case "paragraph":
           return (
             <Container maxWidth="md">
@@ -47,13 +60,13 @@ const ArticleDetails = () => {
           return (
             <Container maxWidth="xl">
               <Grid container spacing={2}>
-                {b.images!.map(i => {
+                {b.images!.map((i: any) => {
                   const mdColumns = Math.round(12 / b.gridColumns!);
                   return (
                     <Grid key={i} item xs={12} md={mdColumns}>
                       <Box
                         component="img"
-                        src={i}
+                        src={sanityUrlBuiler(i).width(500).url()}
                         sx={{
                           width: "100%",
                           height: "100%",
@@ -90,12 +103,12 @@ const ArticleDetails = () => {
                     items: 2,
                   },
                 }}>
-                {b.images!.map((i, index) => {
+                {b.images!.map((i: any, index: any) => {
                   return (
                     <Box
                       key={index}
                       component="img"
-                      src={i}
+                      src={sanityUrlBuiler(i).width(500).url()}
                       sx={{
                         width: "100%",
                         height: "100%",
@@ -116,15 +129,14 @@ const ArticleDetails = () => {
   return (
     <main>
       <Container
+        sx={{ pt: "128px", mb: 4 }}
         component={Stack}
         spacing={1}
-        maxWidth="md"
-        sx={{ mb: 3, mt: 2 }}>
+        maxWidth="md">
         <Typography
+          variant="h5"
           textAlign={{ xs: "left", md: "center" }}
-          variant="h4"
-          maxWidth="md"
-          textTransform="uppercase"
+          sx={{ mb: 3, mt: 2 }}
           fontWeight={700}>
           {article.title}
         </Typography>
@@ -134,7 +146,7 @@ const ArticleDetails = () => {
         <Typography
           textAlign={{ xs: "left", md: "center" }}
           color="text.secondary">
-          {article.date}
+          {new Date(article.date).toDateString()}
         </Typography>
       </Container>
       <Stack spacing={4} alignItems="center">

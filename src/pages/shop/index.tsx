@@ -2,11 +2,7 @@ import React from "react";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardMedia,
   Container,
-  FormControlLabel,
   Grid,
   IconButton,
   Link,
@@ -21,11 +17,10 @@ import { useRouter } from "next/router";
 import { groq } from "next-sanity";
 import { client } from "../../../sanity/lib/client";
 import ProductCard from "@/components/ProductCard";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
 export const getServerSideProps: GetServerSideProps<any> = async context => {
-  const { page, category, variants } = context.query;
-
-  const groqQuery = groq`*[_type == "product"]{ _id, title, variants[0]{price}}`;
+  const groqQuery = groq`*[_type == "product"]{ _id, title, variants[0]{price}, featuredImage}`;
   const productResponse = await client.fetch(groqQuery);
 
   return {
@@ -70,39 +65,29 @@ const Shop = (props: any) => {
   const createCheckoutSession = () => {};
 
   return (
-    <Container maxWidth="lg">
-      <Stack sx={{ mt: 2 }} spacing={4} alignItems="center">
-        <Typography
-          variant="h5"
-          textAlign="center"
-          textTransform="uppercase"
-          fontWeight={700}>
+    <Container maxWidth="lg" sx={{ pt: "128px" }}>
+      <Stack sx={{ mt: 2 }} spacing={4}>
+        <Typography variant="h5" sx={{ mb: 3 }} fontWeight={700}>
           All Products
         </Typography>
+
         <div>
-          <Grid container spacing={{ xs: 0.5, md: 3 }}>
+          <Grid container spacing={{ xs: 0.5, md: 4 }}>
             {productData.map((p: any) => {
+              if (!p.featuredImage) return null;
               return (
                 <Grid item xs={6} sm={6} md={4}>
                   <ProductCard
                     brand="Retromotive"
                     title={p.title}
                     price={p.variants.price}
-                    image="https://retromotive.co/wp-content/uploads/2023/07/12100-36.jpg"
+                    image={sanityUrlBuiler(p.featuredImage).width(300).url()}
                   />
                 </Grid>
               );
             })}
           </Grid>
         </div>
-        <Pagination
-          color="primary"
-          count={1}
-          page={activePage}
-          onChange={handlePageChange}
-          variant="outlined"
-        />
-        <Button>Checkout</Button>
       </Stack>
     </Container>
   );

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Box,
   Button,
   Card,
   CardActions,
@@ -14,12 +13,29 @@ import {
 import { useRouter } from "next/router";
 import { SlArrowRightCircle } from "react-icons/sl";
 
-import { articles } from "@/data/articles";
+import { client } from "../../../sanity/lib/client";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
-const Articles = () => {
+export const getStaticProps = async () => {
+  const res = await client.fetch(`*[_type == "article"]{
+    description,
+    date,
+    contentHandle,
+    title,
+    feturedImage
+  }`);
+  return {
+    props: {
+      articles: res,
+    },
+  };
+};
+
+const Articles = ({ articles }: any) => {
+  console.log(articles, "articles");
   const router = useRouter();
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ pt: "128px" }}>
       <Typography
         variant="h5"
         textTransform="uppercase"
@@ -28,24 +44,31 @@ const Articles = () => {
         Articles
       </Typography>
       <Grid container spacing={4}>
-        {articles.map(a => {
+        {articles.map((a: any) => {
           return (
             <Grid item xs={12} sm={6} md={4}>
               <Card>
-                <CardMedia component="img" src={a.feturedImage} />
+                <CardMedia
+                  component="img"
+                  src={sanityUrlBuiler(a.feturedImage).width(400).url()}
+                />
                 <CardHeader
                   title={a.title}
                   titleTypographyProps={{ variant: "body1" }}
-                  subheader={a.date}
+                  subheader={new Date(a.date).toDateString()}
                   subheaderTypographyProps={{ variant: "body2" }}
                   sx={{ pb: 0 }}
                 />
                 <CardContent>
-                  <Typography variant="body2">{a.description}</Typography>
+                  <Typography variant="body2">
+                    {a.description.slice(0, 190)}
+                  </Typography>
                 </CardContent>
                 <CardActions>
                   <Button
-                    onClick={() => router.push(`/articles/${a.contentHandle}`)}
+                    onClick={() =>
+                      router.push(`/articles/${a.contentHandle.current}`)
+                    }
                     variant="contained"
                     color="secondary"
                     endIcon={<SlArrowRightCircle />}>
