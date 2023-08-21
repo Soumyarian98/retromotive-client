@@ -67,6 +67,11 @@ export default defineType({
       type: "image",
     }),
     defineField({
+      title: "PDF",
+      name: "pdf",
+      type: "file",
+    }),
+    defineField({
       title: "Images",
       name: "images",
       type: "array",
