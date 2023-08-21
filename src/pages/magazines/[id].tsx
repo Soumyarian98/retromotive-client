@@ -81,7 +81,7 @@ const MagazineDetails = (props: any) => {
   return (
     <Container sx={{ pt: "120px" }}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={7}>
           <Grid
             container
             spacing={1}
@@ -116,7 +116,7 @@ const MagazineDetails = (props: any) => {
             </Carousel>
           </Box>
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={5}>
           <Stack gap={4}>
             <div>
               <Typography variant="h5" fontWeight={700}>
