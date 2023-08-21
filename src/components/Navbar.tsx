@@ -70,37 +70,47 @@ const Navbar = () => {
 
   return (
     <Box>
-      <ElevationScroll>
-        <AppBar className="w-full fixed h-[96px] md:[128px] z-[100] bg-[#FCFCFC] text-gray-950">
-          <Container className="h-full">
-            <div className="flex items-center justify-between h-full">
-              <Logo />
-              <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
-                {listItems}
-              </Stack>
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={{ xs: 1, md: 2 }}>
-                {isSignedIn ? (
-                  <UserButton />
-                ) : (
-                  <SignInButton mode="modal">
-                    <Button sx={{ textTransform: "uppercase" }}>Login</Button>
-                  </SignInButton>
-                )}
-                <CartButton />
-                <IconButton
-                  color="secondary"
-                  sx={{ display: { xs: "inline-flex", lg: "none" } }}
-                  onClick={() => setOpen(true)}>
-                  <FiMenu />
-                </IconButton>
-              </Stack>
-            </div>
-          </Container>
-        </AppBar>
-      </ElevationScroll>
+      <AppBar
+        sx={{
+          height: {
+            xs: "80px",
+          },
+          bgcolor: "#fcfcfc",
+          color: "black",
+          zIndex: 1000,
+        }}
+        position="fixed">
+        <Container className="h-full">
+          <div className="flex items-center justify-between h-full">
+            <Logo />
+            <Stack direction="row" display={{ xs: "none", lg: "flex" }}>
+              {listItems}
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={{ xs: 1, md: 2 }}>
+              {isSignedIn ? (
+                <UserButton />
+              ) : (
+                <SignInButton mode="modal">
+                  <Button sx={{ textTransform: "uppercase" }}>Login</Button>
+                </SignInButton>
+              )}
+              <CartButton />
+              <IconButton
+                color="secondary"
+                sx={{ display: { xs: "inline-flex", lg: "none" } }}
+                onClick={() => setOpen(true)}>
+                <FiMenu />
+              </IconButton>
+            </Stack>
+          </div>
+        </Container>
+      </AppBar>
+      {/* <ElevationScroll>
+        
+      </ElevationScroll> */}
 
       <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
         <Stack
