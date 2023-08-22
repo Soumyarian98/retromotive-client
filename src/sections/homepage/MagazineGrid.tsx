@@ -20,6 +20,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
 const data = [
   {
@@ -52,7 +53,7 @@ const data = [
   },
 ];
 
-const MagazineGrid = () => {
+const MagazineGrid = ({ quaterlies }: any) => {
   const { palette: p } = useTheme();
   return (
     <Container sx={{ overflow: "hidden", px: { xs: 0, md: 2 } }}>
@@ -64,10 +65,10 @@ const MagazineGrid = () => {
           Quaterlies
         </Typography>
         <VerticalTimeline lineColor={p.primary.main}>
-          {data.map(item => {
+          {quaterlies.map((item: any, index: any) => {
             return (
               <VerticalTimelineElement
-                key={item.id}
+                key={index}
                 contentStyle={{
                   background: "transparent",
                   boxShadow: "none",
@@ -99,7 +100,9 @@ const MagazineGrid = () => {
                     <CardActionArea>
                       <CardMedia
                         component="img"
-                        src={item.image}
+                        src={sanityUrlBuiler(item.featuredImage)
+                          .width(600)
+                          .url()}
                         alt={item.title}
                         sx={{
                           width: "100%",
@@ -112,27 +115,24 @@ const MagazineGrid = () => {
                           direction="row"
                           spacing={2}
                           justifyContent="space-between">
-                          <Typography
-                            variant="h6"
-                            fontWeight={600}
-                            component="div">
-                            {item.title}
-                          </Typography>
+                          <div>
+                            <Typography variant="h6" fontWeight={600}>
+                              {item.title}
+                            </Typography>
+                            <Typography
+                              component="div"
+                              variant="body2"
+                              color="textSecondary">
+                              Retromotive
+                            </Typography>
+                          </div>
                           <Typography
                             variant="h6"
                             fontSize="18px"
                             component="div">
-                            $29.99
+                            A${item.price[0].value}
                           </Typography>
                         </Stack>
-                        <Typography
-                          variant="body1"
-                          color="text.secondary"
-                          component="div"
-                          mt={1}>
-                          Lorem, ipsum dolor sit amet consectetur adipisicing
-                          elit. Minima, fugit!
-                        </Typography>
                       </CardContent>
                     </CardActionArea>
                   </Box>

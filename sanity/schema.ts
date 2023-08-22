@@ -8,6 +8,7 @@ import magazine from "./schemas/magazine";
 import about from "./schemas/about";
 import subscription from "./schemas/subscription";
 import advertise from "./schemas/advertise";
+import homepage from "./schemas/homepage";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -16,9 +17,10 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     magazine,
     article,
     policy,
-    blockContent,
+    homepage,
     about,
     subscription,
     advertise,
+    blockContent,
   ],
 };

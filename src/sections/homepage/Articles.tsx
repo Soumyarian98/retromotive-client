@@ -1,9 +1,6 @@
-import { nanoid } from "nanoid";
 import React from "react";
 import { SlArrowRightCircle } from "react-icons/sl";
 import Tilt from "react-parallax-tilt";
-import { motion } from "framer-motion";
-import { textVariant } from "@/utils/motion";
 import {
   Box,
   Button,
@@ -17,29 +14,31 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { articles } from "@/data/articles";
 import { useRouter } from "next/router";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
-const Articles = () => {
+const Articles = ({ articles }: any) => {
   const router = useRouter();
   return (
     <Container maxWidth="lg">
       <Stack justifyContent="center" spacing={4}>
         <Typography
           variant="h5"
-          textAlign="center"
-          textTransform="uppercase"
+          textAlign={{ xs: "left", md: "center" }}
           fontWeight={700}>
           Articles
         </Typography>
         <div>
           <Grid container spacing={4}>
-            {articles.map(a => {
+            {articles.map((a: any) => {
               return (
                 <Grid item xs={12} sm={6} md={4}>
                   <Tilt key={a.id}>
                     <Card>
-                      <CardMedia component="img" src={a.feturedImage} />
+                      <CardMedia
+                        component="img"
+                        src={sanityUrlBuiler(a.feturedImage).width(700).url()}
+                      />
                       <CardHeader
                         disableTypography
                         title={
@@ -60,7 +59,7 @@ const Articles = () => {
                               xs: "12px",
                               md: "14px",
                             }}>
-                            {a.date}
+                            {new Date(a.date).toDateString()}
                           </Typography>
                         }
                         sx={{ pb: 0 }}
@@ -71,6 +70,12 @@ const Articles = () => {
                           fontSize={{
                             xs: "12px",
                             md: "14px",
+                          }}
+                          sx={{
+                            height: "100px",
+                            width: "100%",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
                           }}>
                           {a.description}
                         </Typography>

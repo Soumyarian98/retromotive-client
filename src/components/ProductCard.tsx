@@ -33,7 +33,7 @@ const ProductCard: FC<Props> = ({ brand, image, price, title }) => {
             image={image}
           />
 
-          <CardContent sx={{ pb: 0 }}>
+          <CardContent>
             <Stack>
               <Typography
                 fontSize={{ xs: "12px", lg: "16px" }}

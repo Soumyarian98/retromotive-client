@@ -25,7 +25,6 @@ const CarouselControls: FC<Props> = ({
       steps={numberOfSlides}
       position="static"
       activeStep={activeIndex}
-      sx={{ maxWidth: 400, flexGrow: 1 }}
       nextButton={
         <Button endIcon={<FiChevronRight />} onClick={handleNext}>
           Next

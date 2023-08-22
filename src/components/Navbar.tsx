@@ -19,7 +19,6 @@ import { nanoid } from "nanoid";
 import { useRouter } from "next/router";
 import CartButton from "./CartButton";
 import { UserButton, SignInButton, useUser } from "@clerk/clerk-react";
-import ElevationScroll from "./ElevateOnScroll";
 
 const menus = [
   {

@@ -1,3 +1,4 @@
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 import { Box } from "@mui/material";
 
 const caseStudies = [
@@ -20,28 +21,28 @@ const caseStudies = [
     img: "https://retromotive.co/wp-content/uploads/2023/03/COVERS1-large.jpg",
   },
 ];
-const BannerItems = () => {
+const BannerItems = ({ bannerImages }: any) => {
   return (
     <section className="main relative">
       <div className="flex flex-col md:flex-row">
-        {caseStudies.map(caseItem => {
+        {bannerImages.map((caseItem: any) => {
           return (
             <Box
               position="relative"
               bgcolor="black"
               sx={{ cursor: "pointer", width: "100%" }}
-              key={caseItem.id}>
+              key={caseItem._key}>
               <div className="w-full md:w-full h-[50vh] main flex flex-col justify-center p-4 md:p-12 border-box z-10 relative">
                 <span className="mt-[156px] text-[1.2rem] md:text-[1.4rem] xl:text-[1.6rem] opacity-80 text-white">
-                  {caseItem.subtitle}
+                  {caseItem.title}
                 </span>
                 <h2 className="text-[2rem] leading-[2.2rem] md:leading-[2.4rem] xl:leading-[3rem] w-[85%] mt-2 md:mt-4 text-white font-bold">
-                  {caseItem.title}
+                  {caseItem.description}
                 </h2>
               </div>
               <div className="absolute overflow-hidden w-full h-full top-0 left-0 opacity-60 transition-opacity case-image">
                 <img
-                  src={caseItem.img}
+                  src={sanityUrlBuiler(caseItem.featuredImage).width(400).url()}
                   className="w-full h-full object-cover"
                   alt={caseItem.title}
                 />

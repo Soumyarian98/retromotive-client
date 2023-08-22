@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useInView } from "framer-motion";
 import { nanoid } from "nanoid";
 import { Button, Container } from "@mui/material";
 import CarouselControls from "./CarouselControls";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
 const variant = {
   initial: { y: "200%", opacity: 0 },
@@ -42,14 +43,14 @@ const data = [
 const hiddenMask = `repeating-linear-gradient(to right, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 30px, rgba(0,0,0,1) 30px, rgba(0,0,0,1) 30px)`;
 const visibleMask = `repeating-linear-gradient(to right, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 0px, rgba(0,0,0,1) 0px, rgba(0,0,0,1) 30px)`;
 
-const DataCarousel = () => {
+const DataCarousel = ({ carousel }: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex(prev => (prev + 1) % data.length);
+      setIndex(prev => (prev + 1) % carousel.length);
     }, 5000);
 
     return () => {
@@ -63,7 +64,9 @@ const DataCarousel = () => {
         <div className="flex flex-col-reverse md:grid md:grid-cols-2 gap-8 w-full">
           <div className="w-full h-full flex flex-col justify-center">
             <AnimatePresence mode="wait">
-              <div key={data[index].id} className="w-full md:w-8/12 h-[300px]">
+              <div
+                key={carousel[index]._key}
+                className="w-full md:w-8/12 h-[300px]">
                 <div className="overflow-hidden">
                   <motion.h2
                     variants={variant}
@@ -71,7 +74,7 @@ const DataCarousel = () => {
                     animate="animate"
                     exit="exit"
                     className="font-bold text-[1.5rem]">
-                    {data[index].title}
+                    {carousel[index].title}
                   </motion.h2>
                 </div>
                 <div className="overflow-hidden">
@@ -81,7 +84,7 @@ const DataCarousel = () => {
                     animate="animate"
                     exit="exit"
                     className="mt-4">
-                    {data[index].description}
+                    {carousel[index].description}
                   </motion.p>
                 </div>
                 <div className="overflow-hidden">
@@ -92,7 +95,7 @@ const DataCarousel = () => {
                     exit="exit"
                     className="mt-8">
                     <Button variant="contained" size="large">
-                      {data[index].button}
+                      {carousel[index].actionButtonName}
                     </Button>
                   </motion.div>
                 </div>
@@ -101,11 +104,13 @@ const DataCarousel = () => {
           </div>
           <div>
             <AnimatePresence mode="wait">
-              {data.map((d, i) => {
+              {carousel.map((d: any, i: any) => {
                 if (i !== index) return null;
+                const url = sanityUrlBuiler(d.featuredImage).width(500).url();
+                console.log(url);
                 return (
                   <motion.div
-                    key={d.id}
+                    key={d._key}
                     initial={{
                       WebkitMaskImage: hiddenMask,
                       maskImage: hiddenMask,
@@ -120,7 +125,7 @@ const DataCarousel = () => {
                       maskImage: hiddenMask,
                       transition: { duration: 0.75, ease: "easeInOut" },
                     }}>
-                    <img src={d.image} className="w-full height-auto" />
+                    <img src={url} className="w-full height-auto" />
                   </motion.div>
                 );
               })}
@@ -128,12 +133,12 @@ const DataCarousel = () => {
           </div>
         </div>
         <CarouselControls
-          numberOfSlides={data.length}
+          numberOfSlides={carousel.length}
           activeIndex={index}
           changeIndex={p => {
             p === 1
-              ? setIndex(p => (p === data.length - 1 ? 0 : p + 1))
-              : setIndex(p => (p === 0 ? data.length - 1 : p - 1));
+              ? setIndex(p => (p === carousel.length - 1 ? 0 : p + 1))
+              : setIndex(p => (p === 0 ? carousel.length - 1 : p - 1));
           }}
         />
       </div>

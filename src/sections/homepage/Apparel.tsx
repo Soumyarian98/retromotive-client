@@ -1,24 +1,10 @@
-import { nanoid } from "nanoid";
 import React from "react";
-import { FiHeart } from "react-icons/fi";
+import { nanoid } from "nanoid";
 import { SlArrowRightCircle } from "react-icons/sl";
-import { motion } from "framer-motion";
-import { textVariant } from "@/utils/motion";
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Container,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Container, Grid, Stack, Typography } from "@mui/material";
+
 import ProductCard from "@/components/ProductCard";
+import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 
 const data = [
   {
@@ -41,26 +27,25 @@ const data = [
   },
 ];
 
-const Apparel = () => {
+const Apparel = ({ apparel }: any) => {
   return (
     <Container maxWidth="lg">
       <Stack justifyContent="center" spacing={4}>
         <Typography
           variant="h5"
-          textAlign="center"
-          textTransform="uppercase"
+          textAlign={{ xs: "left", md: "center" }}
           fontWeight={700}>
           Apparel
         </Typography>
         <div>
           <Grid container spacing={2}>
-            {data.map(item => {
+            {apparel.map((item: any, index: any) => {
               return (
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={4} key={index}>
                   <ProductCard
                     brand="Retromotive"
-                    image={item.imageUrl}
-                    price={item.price}
+                    image={sanityUrlBuiler(item.featuredImage).width(300).url()}
+                    price={item.variants.price}
                     title={item.title}
                   />
                 </Grid>
