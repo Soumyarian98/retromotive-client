@@ -35,11 +35,11 @@ const Articles = ({ articles }: any) => {
   console.log(articles, "articles");
   const router = useRouter();
   return (
-    <Container maxWidth="lg" sx={{ pt: "128px" }}>
+    <Container maxWidth="lg" sx={{ pt: { xs: "100px", md: "128px" } }}>
       <Typography
         variant="h5"
         textTransform="uppercase"
-        sx={{ mb: 3, mt: 2 }}
+        sx={{ mb: 3 }}
         fontWeight={700}>
         Articles
       </Typography>
