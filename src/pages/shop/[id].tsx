@@ -1,26 +1,42 @@
 import React from "react";
 import { Container, Grid, Stack, Typography } from "@mui/material";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticPaths } from "next";
 import { groq } from "next-sanity";
-import { client } from "../../../sanity/lib/client";
 import ProductCard from "@/components/ProductCard";
 import { sanityUrlBuiler } from "@/utils/sanityImageBuilder";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
-import NextLink from "next/link";
+import { client } from "../../../sanity/lib/client";
 
-export const getServerSideProps: GetServerSideProps<any> = async context => {
-  const groqQuery = groq`*[_type == "product"]{ _id, title,slug , variants[0]{price}, featuredImage}`;
+export const getStaticPaths: GetStaticPaths = async () => {
+  const groqQuery = groq`*[_type == "category"]{slug}`;
   const productResponse = await client.fetch(groqQuery);
-
+  const paths = productResponse.map((p: any) => ({
+    params: { id: p.slug.current },
+  }));
   return {
-    props: {
-      productData: productResponse,
-    },
+    paths,
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetServerSideProps<any> = async ({ params }) => {
+  const groqQuery = groq`*[_type == "category" && slug.current == "${params?.id}" ][0]{
+    title,
+    _id,
+    slug,
+    "productData": *[_type == "product" && references(^._id)]{
+      _id, title,slug , variants[0]{price}, featuredImage
+    }
+  }`;
+  const productResponse = await client.fetch(groqQuery);
+  return {
+    props: productResponse,
   };
 };
 
 const Shop = (props: any) => {
-  const { productData } = props;
+  const { slug, title, productData } = props;
+  console.log(props, "productData");
   return (
     <Container maxWidth="lg" sx={{ pt: { xs: "100px", md: "128px" }, mb: 4 }}>
       <Stack spacing={4}>
@@ -29,7 +45,7 @@ const Shop = (props: any) => {
           textTransform="uppercase"
           sx={{ mb: 2, fontSize: { xs: "18px", md: "24px" } }}
           fontWeight={700}>
-          All Products
+          {title}
         </Typography>
 
         <div>
@@ -44,7 +60,7 @@ const Shop = (props: any) => {
                       title={p.title}
                       price={p?.variants?.price ?? 0}
                       image={sanityUrlBuiler(p.featuredImage).width(400).url()}
-                      redirectUrl={`/shop/products/${p.slug.current}`}
+                      redirectUrl={`/product/${p.slug.current}`}
                     />
                   </LazyLoadComponent>
                 </Grid>

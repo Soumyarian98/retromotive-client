@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Badge,
   Box,
@@ -64,6 +64,16 @@ const CartButton = () => {
     mutation.mutate();
   };
 
+  const getPrice = (item: any) => {
+    if (item._type === "product") {
+      return item.selectedVariant.price;
+    } else {
+      return item.price?.[0].value;
+    }
+  };
+
+  console.log(cartData, "cartData");
+
   return (
     <>
       <Badge badgeContent={cartData.length} color="secondary">
@@ -73,7 +83,7 @@ const CartButton = () => {
       </Badge>
       <Drawer anchor="right" open={show} onClose={toggle}>
         <Box sx={{ bgcolor: "#fcfcfc" }}>
-          <Box sx={{ position: "sticky", top: 0 }}>
+          <Box sx={{ position: "sticky", top: 0, zIndex: 100 }}>
             <Stack
               component={Paper}
               direction="row"
@@ -116,21 +126,21 @@ const CartButton = () => {
                 <CardHeader
                   disableTypography
                   title={
-                    <Typography fontSize="18px" fontWeight={700}>
+                    <Typography variant="body1" fontWeight={700}>
                       {c.item.title}
                     </Typography>
                   }
                   subheader={
-                    <Typography fontSize="14px" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary">
                       Retromotive
                     </Typography>
                   }
                   action={
                     <Typography
-                      fontSize="18px"
+                      variant="body1"
                       sx={{ mt: 0.5 }}
                       fontWeight={600}>
-                      ${c.item.price?.[0].value}
+                      A${getPrice(c.item)}
                     </Typography>
                   }
                   sx={{ pb: 0 }}
