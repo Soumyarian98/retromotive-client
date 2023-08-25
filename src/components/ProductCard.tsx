@@ -8,31 +8,32 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { FiHeart } from "react-icons/fi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 interface Props {
   title: string;
   brand: string;
   price: number;
   image: string;
+  redirectUrl: string;
 }
 
-const ProductCard: FC<Props> = ({ brand, image, price, title }) => {
+const ProductCard: FC<Props> = ({
+  brand,
+  image,
+  price,
+  title,
+  redirectUrl,
+}) => {
+  const router = useRouter();
   return (
-    <Card elevation={0} sx={{ height: "100%" }}>
+    <Card elevation={0} sx={{ height: "100%", minHeight: "280px" }}>
       <Box sx={{ position: "relative" }}>
-        <CardActionArea>
-          <CardMedia
-            sx={{
-              cursor: "pointer",
-              textDecoration: "none",
-              borderRadius: 4,
-            }}
-            component="img"
-            image={image}
-          />
-
+        <CardActionArea onClick={() => router.push(redirectUrl)}>
+          <LazyLoadImage src={image} width="100%" />
           <CardContent>
             <Stack>
               <Typography
@@ -52,7 +53,7 @@ const ProductCard: FC<Props> = ({ brand, image, price, title }) => {
               color="#000"
               fontWeight={600}
               sx={{ mt: 1.5 }}>
-              ${price}
+              A${price}
             </Typography>
           </CardContent>
         </CardActionArea>

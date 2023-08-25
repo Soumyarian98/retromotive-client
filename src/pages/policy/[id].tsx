@@ -32,8 +32,7 @@ const Policy = (props: any) => {
   return (
     <Container sx={{ pt: { xs: "100px", md: "128px" }, mb: 4 }}>
       <Typography
-        variant="h5"
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, fontSize: { xs: "18px", md: "24px" } }}
         textTransform="uppercase"
         fontWeight={700}>
         {props.title}

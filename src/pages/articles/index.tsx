@@ -39,7 +39,7 @@ const Articles = ({ articles }: any) => {
       <Typography
         variant="h5"
         textTransform="uppercase"
-        sx={{ mb: 3 }}
+        sx={{ mb: 2, fontSize: { xs: "18px", md: "24px" } }}
         fontWeight={700}>
         Articles
       </Typography>
