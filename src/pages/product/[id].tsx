@@ -134,7 +134,6 @@ const ProductDetails = (props: any) => {
                         <Chip
                           key={e._key}
                           variant={isSelected ? "filled" : "outlined"}
-                          size="small"
                           label={e.value}
                           color={isSelected ? "secondary" : "default"}
                           onClick={() => {
